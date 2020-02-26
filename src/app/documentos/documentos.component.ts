@@ -133,7 +133,10 @@ export class DocumentosComponent implements OnInit {
             console.log(oldPdf[0]);
              produto = oldPdf[0].items[21].str;
              liga = oldPdf[0].items[24].str;
+
+            if(oldPdf[0].items[25].str.search("HRB") != -1 )
              durezaTracao = oldPdf[0].items[25].str;
+
              espessuraMedidas = oldPdf[0].items[27].str;
              espessuraOBS = "";
 
