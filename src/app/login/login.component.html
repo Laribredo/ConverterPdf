@@ -1,1 +1,29 @@
-<p>login works!</p>
+<div class="container tamanho">
+    <div class="row tamanho">
+        <div class="col-12 align-self-center">
+            <div class="wrapper fadeInDown zero-raduis">
+                <div id="formContent">
+                    <!-- Tabs Titles -->
+
+                    <!-- Icon -->
+                    <div class="fadeIn first">
+                        <!-- <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" /> -->
+                        <h2 class="my-5">Sign In</h2>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form [formGroup]="formulario" (ngSubmit)="logar()">
+                        <input type="email" id="email" class="fadeIn second zero-raduis" required name="email" placeholder="email" formControlName="email">
+                        <input type="password" id="password" class="fadeIn third zero-raduis" required name="login" placeholder="password" formControlName="senha">
+                        <div *ngIf='mensagem !=="" ' class="alert alert-danger" role="alert">
+                            {{mensagem}}
+                        </div>
+                        <input type="submit" class="fadeIn fourth zero-raduis" value="login">
+                        <h2>Quero me cadastrar</h2>
+                        <input type="submit" class="fadeIn fourth zero-raduis pc" value="Cadastrar-se">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

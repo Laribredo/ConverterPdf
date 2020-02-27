@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class appService{
     
     constructor(
-        private http : HttpClient
+        private http : HttpClient,
+        private router:Router
     ){
 
     }
@@ -21,7 +23,14 @@ export class appService{
             console.log(res);  
             return res
         })
-            
-        
+    }
+
+    public autenticado():boolean{       
+        let isAuth:boolean = localStorage.getItem('idToken') == null || localStorage.getItem('idToken') === undefined ? false : true    
+
+        if(!isAuth)
+            this.router.navigate(['/login'])
+
+        return  isAuth
     }
 }

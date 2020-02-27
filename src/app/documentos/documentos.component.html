@@ -6,12 +6,12 @@
                 <input #pdf type="file" formControlName="pdf">
                 <div class="form-group">
                     <label for="exampleFormControlInput1">Emissao</label>
-                    <input [(ngModel)]="emissao" type="text" class="form-control" formControlName="emissao">
+                    <input type="text" class="form-control" formControlName="emissao">
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlSelect2">Clientes</label>
                     <select multiple class="form-control" id="exampleFormControlSelect2" formControlName="Clientes">
-                        <option>TESTE / CNPJ: 00000000/0000</option>
+                        <option *ngFor="let cliente of _clientes" [ngValue]="cliente"> {{cliente.nome}} - {{cliente.cnpj}}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -30,8 +30,8 @@
                     <label for="exampleFormControlInput1">Conferido C.Q</label>
                     <input type="text" class="form-control" formControlName="ConferidoCQ">
                 </div>
-                   <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="pdfConverter(pdf)"> Gerar Preview </button> 
-            </form>                  
+                <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="teste(pdf)"> Gerar Preview </button>
+            </form>
         </div>
     </div>
 </div>
@@ -43,11 +43,10 @@
                     <tr>
                         <td class="font-weight-bold">CYPRIUM</td>
                         <td class="font-weight-bold">
-                            CERTIFICADO
-                            GARANTIA DA QUALIDADE</td>
+                            CERTIFICADO GARANTIA DA QUALIDADE</td>
                         <td class="font-weight-bold">N Certificado</td>
                     </tr>
-                    <tr>                    
+                    <tr>
                         <td>Emissao</td>
                         <td colspan="3" class="text-left" id="emissao">Thornton</td>
                     </tr>
@@ -57,15 +56,15 @@
                     </tr>
                     <tr>
                         <td>CNPJ</td>
-                        <td colspan="3" class="text-left" id="cnpj" >999999999/99999</td>
+                        <td colspan="3" class="text-left" id="cnpj">999999999/99999</td>
                     </tr>
                     <tr>
                         <td>Produto</td>
-                        <td colspan="3" class="text-left" id="produto" >aaaaaaaaa</td>
+                        <td colspan="3" class="text-left" id="produto">aaaaaaaaa</td>
                     </tr>
                     <tr>
                         <td colspan="9">
-                            <table class="table table-bordered text-center">
+                            <table>
                                 <tr>
                                     <td>Nota Fiscal</td>
                                     <td>9999999999</td>
@@ -102,7 +101,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">Teste de Dobra</td>
-                                    <td colspan="2" id="testeDeDobraMedidas" >121516</td>
+                                    <td colspan="2" id="testeDeDobraMedidas">121516</td>
                                     <td colspan="2" id="testeDeDobraObs">xxxxxxxxxxxx</td>
                                 </tr>
                                 <tr>
@@ -137,9 +136,7 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>            
+            </table>
         </div>
     </div>
 </div>
-      
-
