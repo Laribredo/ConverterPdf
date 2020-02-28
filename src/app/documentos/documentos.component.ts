@@ -20,13 +20,34 @@ export class DocumentosComponent implements OnInit {
   _documento : Documentos;
   _oldPDF : any;
   public _clientes: Array<Clientes>
+  _items: any = [];
+
 
   public formulario:FormGroup = new FormGroup({
-    'pdf': new FormControl(null),
+    'pdf': new FormControl(null),    
     'emissao': new FormControl(null),
-    'Clientes': new FormControl(null),
     'notaFiscal': new FormControl(null),
+    'Clientes': new FormControl(null),
+    'produto': new FormControl(null),
+    'desenho': new FormControl(null),
     'op': new FormControl(null),
+    'liga': new FormControl(null),
+    'durezaTracao': new FormControl(null),
+    'espessuraMedidas': new FormControl(null),
+    'espessuraObs': new FormControl(null),
+    'larguraMedidas': new FormControl(null),
+    'larguraObs': new FormControl(null),
+    'durezaMedidas': new FormControl(null),
+    'durezaObs': new FormControl(null),
+    'testeMedidas': new FormControl(null),
+    'testeObs': new FormControl(null),
+    'pesoMedidas': new FormControl(null),
+    'pesoObs': new FormControl(null),
+    'ocMedidas': new FormControl(null),
+    'ocObs': new FormControl(null),
+    'analiseQuimica': new FormControl(null),
+    'obs': new FormControl(null),
+    'corrida': new FormControl(null),
     'LiberadoCQ': new FormControl(null),
     'ConferidoCQ': new FormControl(null)
   })
@@ -44,8 +65,28 @@ export class DocumentosComponent implements OnInit {
     let data = new Date();
     this.formulario.controls['emissao'].setValue(data.getDate() + "/" +( (data.getMonth()+1) < 10 ? "0" + (data.getMonth()+1) : data.getMonth() ) + "/" + data.getFullYear())
     this._bd.getClientes().then(res =>{
-      this._clientes = res    
+      this._clientes = res       
     });
+  }
+
+  async preencheValoresPdf(pdf:any)
+  {
+
+    // this.criarNovoPdf();
+    // console.log(this.formulario.value.Clientes);
+
+    let promise = await this.pdfConverter(pdf).then(res =>{
+      this._items = res;
+      console.log(res);        
+    });
+    // this.pdfConverter(pdf).then((res:Response) =>{
+    //  setTimeout(() => {
+    //    console.log(res);       
+    //  }, 500);
+      //this.formulario.controls['produto'].setValue(res[0].items[21])
+         
+  //  })
+
   }
 
   teste(pdf:any)
@@ -62,7 +103,7 @@ export class DocumentosComponent implements OnInit {
   criarNovoPdf(){
 
     let myWindow;
-    myWindow=window.open('','','width=1280,height=720');
+    myWindow=window.open('','','width=1000,height=900');
     myWindow.document.write('<html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
     myWindow.document.write(document.querySelector("#tabela").innerHTML);
     myWindow.document.write("</body></html>")
@@ -75,7 +116,7 @@ export class DocumentosComponent implements OnInit {
     // myWindow.print(); 
 
       //document.body.appendChild(canvas)
-  };
+  
 
     // var doc = new jsPDF('portrait', 'pt', 'a4'),
     // data = new Date();
@@ -96,7 +137,8 @@ export class DocumentosComponent implements OnInit {
     //   });
         // }
   
-
+  }
+  
    pdfConverter(pdfA:any): Promise<any>{
     var file = pdfA.files[0];
 
