@@ -51,11 +51,46 @@ export class DocumentosComponent implements OnInit {
   teste(pdf:any)
   {
 
+    this.criarNovoPdf();
     console.log(this.formulario.value.Clientes);
 
     this.pdfConverter(pdf).then(res =>{
       console.log(res);      
     })
+  }
+
+  criarNovoPdf(){
+
+    let myWindow;
+    myWindow=window.open('','','width=1280,height=720');
+    myWindow.document.write("<html><head><style>  td{border: 1px solid}   </style></head><body>")
+    myWindow.document.write(document.querySelector("#tabela").innerHTML);
+    myWindow.document.write("</body></html>")
+
+
+    myWindow.document.close(); //missing code
+
+
+    myWindow.focus();
+    //myWindow.print(); 
+    // var doc = new jsPDF('portrait', 'pt', 'a4'),
+    // data = new Date();
+    // var margins = {
+    //   top: 40,
+    //   bottom: 60,
+    //   left: 40,
+    //   width: 1000
+    // };
+
+    // var codigoHTML = document.querySelector("#tabela");
+
+    // doc.fromHTML(codigoHTML,
+    //   margins.left, // x coord
+    //   margins.top, { pagesplit: true },
+    //   function(dispose){
+    //     doc.save("Relatorio - "+data.getDate()+"/"+data.getMonth()+"/"+data.getFullYear()+".pdf");
+    //   });
+        // }
   }
 
    pdfConverter(pdfA:any): Promise<any>{

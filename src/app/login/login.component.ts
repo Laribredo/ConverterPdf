@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BD } from './../../services/bd.service'
 import { appService } from './../../services/app.service'
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   public formulario:FormGroup = new FormGroup({
-    'email': new FormControl(null),
+    'email': new FormControl(null,[Validators.required]),
     'senha': new FormControl(null)
   });
 
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private _bd : BD,
     private _service : appService,
-    private router: Router
+    public router: Router
   ) { }
 
   ngOnInit(): void {

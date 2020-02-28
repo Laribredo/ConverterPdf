@@ -1,5 +1,188 @@
 <div class="container">
     <div class="row">
+        <div class="col-11">
+            <div class="jumbotron">
+                <h1 class="display-4">Gerar novo PDF</h1>
+                <p class="lead">Geração de um novo PDF com captação de dados</p>
+                <hr class="my-4">
+                <form [formGroup]="formulario">
+                    <div class="form-row">
+                      <div class="col-md-4 mb-3">
+                        <label>Emissao</label>
+                        <input type="text" class="form-control" required formControlName="emissao">
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label>Nota Fiscal</label>
+                        <input type="text" class="form-control" placeholder="Nota Fiscal"  formControlName="notaFiscal">
+                      </div>
+                      <div class="col-md-9 mb-3">
+                        <label>Clientes</label>
+                        <select multiple class="form-control"  formControlName="Clientes">
+                            <option *ngFor="let cliente of _clientes" [ngValue]="cliente"> {{cliente.nome}} - {{cliente.cnpj}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-md-9 mb-3">
+                        <label>O.P</label>
+                        <input type="text" class="form-control" formControlName="op">
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label>Liberado C.Q</label>
+                        <input type="text" class="form-control" formControlName="LiberadoCQ">
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label>Conferido C.Q</label>
+                        <input type="text" class="form-control" formControlName="ConferidoCQ">
+                      </div>
+                      <div class="col-md-8 mb-3">
+                        <label>Escolha um arquivo PDF para a recuperação dos dados</label>
+                        <input #pdf type="file" formControlName="pdf">
+                      </div>
+                    </div>
+                    <hr>            
+                  </form>
+                <div class="row">
+                    <div class="col-md-7 offset-md-4">
+                        <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="teste(pdf)"> Gerar Preview </button>
+                    </div>
+                </div>  
+              </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div id="tabela" class="modal-content">
+            <table class="table table-bordered text-center">
+                <tbody style="border: 1px solid;">
+                    <tr>
+                        <td>CYPRIUM</td>
+                        <td>
+                            CERTIFICADO GARANTIA DA QUALIDADE</td>
+                        <td>N Certificado</td>
+                    </tr>
+                    <!-- <tr>
+                        <td>Emissao</td>
+                        <td colspan="3" class="text-left" id="emissao">Thornton</td>
+                    </tr>
+                    <tr>
+                        <td>Cliente</td>
+                        <td colspan="3" class="text-left" id="cliente">Fulano de Tal</td>
+                    </tr>
+                    <tr>
+                        <td>CNPJ</td>
+                        <td colspan="3" class="text-left" id="cnpj">999999999/99999</td>
+                    </tr>
+                    <tr>
+                        <td>Produto</td>
+                        <td colspan="3" class="text-left" id="produto">aaaaaaaaa</td>
+                    </tr> -->
+                    <!-- <tr>
+                        <td colspan="9">
+                            <table class="table table-bordered text-center">>
+                                <tr>
+                                    <td>Nota Fiscal</td>
+                                    <td>9999999999</td>
+                                    <td>Desenho</td>
+                                    <td id="desenho">9999999</td>
+                                    <td>O.P</td>
+                                    <td>9999999999</td>
+                                </tr>
+                                <tr>
+                                    <td>Liga</td>
+                                    <td id="liga">CCCCCCCCC</td>
+                                    <td colspan="2">Dureza / Tracao</td>
+                                    <td colspan="2" id="durezaTracao">000000000</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Denominacao</td>
+                                    <td colspan="2">Medidas Encontradas</td>
+                                    <td colspan="2">Observacao</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Espessura</td>
+                                    <td id="espessuraMedidas" colspan="2">121516</td>
+                                    <td id="espessuraObs" colspan="2">xxxxxxxxxxxx</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Largura</td>
+                                    <td colspan="2" id="larguraMedidas">121516</td>
+                                    <td colspan="2" id="larguraObs">xxxxxxxxxxxx</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Dureza</td>
+                                    <td colspan="2" id="durezaMedidas">121516</td>
+                                    <td colspan="2" id="durezaObs">xxxxxxxxxxxx</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Teste de Dobra</td>
+                                    <td colspan="2" id="testeDeDobraMedidas">121516</td>
+                                    <td colspan="2" id="testeDeDobraObs">xxxxxxxxxxxx</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Peso</td>
+                                    <td colspan="2" id="pesoMedidas">121516</td>
+                                    <td colspan="2" id="pesoObs">xxxxxxxxxxxx</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Ordem de Compra</td>
+                                    <td colspan="2" id="ordemDeCompra">121516</td>
+                                    <td colspan="2" id="ordemDeCompraObs">xxxxxxxxxxxx</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">Analise Quimica</td>
+                                    <td colspan="5" class="text-left" id="analiseQuimica">CU=67,5% FE=0,002% ZN=RESTANTE.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">Observacao</td>
+                                    <td colspan="5" class="text-left" id="observacao">ESTE PROD ESTA EM PLENA CONFORMIDADE COM A DIRECTIVA ROHS 2011/65/UE</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">Corrida n</td>
+                                    <td colspan="5" class="text-left" id="corrida">9999999999/99</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">Liberado C.Q</td>
+                                    <td colspan="2" class="text-left" id="LiberadoCQ">TTTTTTTT</td>
+                                    <td colspan="1">Conferido C.Q</td>
+                                    <td colspan="2" class="text-left" id="ConferidoCQ">TTTTTTTTtttt</td>
+                                </tr>
+                            </table>
+                        </td> 
+                    </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="container">
+    <div class="row">
         <div class="col-md-12">
             <form [formGroup]="formulario">
                 <h3>Selecione o arquivo PDF para conversao</h3>
@@ -139,4 +322,4 @@
             </table>
         </div>
     </div>
-</div>
+</div> -->

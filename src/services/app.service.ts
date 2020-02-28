@@ -33,4 +33,11 @@ export class appService{
 
         return  isAuth
     }
+
+    public sair(){       
+       
+        localStorage.removeItem('idToken');
+
+        
+    }
 }

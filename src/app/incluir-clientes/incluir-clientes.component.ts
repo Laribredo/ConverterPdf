@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { appService } from './../../services/app.service'
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Clientes } from '../../models/clientes';
 import {BD} from '../../services/bd.service'
 import * as firebase from 'firebase'
@@ -17,13 +17,13 @@ import * as firebase from 'firebase'
 export class IncluirClientesComponent implements OnInit {
 
   public formulario: FormGroup = new FormGroup({
-    'nome': new FormControl(null),
-    'cnpj': new FormControl(null),
-    'cep': new FormControl(null),
-    'endereco': new FormControl(null),
-    'complemento': new FormControl(null),
-    'cidade': new FormControl(null),
-    'estado': new FormControl(null)
+    'nome': new FormControl(null, [Validators.required]),
+    'cnpj': new FormControl(null, [Validators.required]),
+    'cep': new FormControl(null, [Validators.required]),
+    'endereco': new FormControl(null, [Validators.required]),
+    'complemento': new FormControl(null, [Validators.required]),
+    'cidade': new FormControl(null, [Validators.required]),
+    'estado': new FormControl(null, [Validators.required])
   })
 
   constructor(
@@ -38,19 +38,21 @@ export class IncluirClientesComponent implements OnInit {
   cadastrarCliente(){
     
     console.log("cadastrarCliente");
-    
+    if( this.formulario.status == "VALID")
+    {
 
-    let _cliente = new Clientes(
-      this.formulario.value.nome,
-      this.formulario.value.cnpj,
-      this.formulario.value.endereco,
-      this.formulario.value.complemento,
-      this.formulario.value.cidade,
-      this.formulario.value.estado,
-      this.formulario.value.cep
-    )
+      let _cliente = new Clientes(
+        this.formulario.value.nome,
+        this.formulario.value.cnpj,
+        this.formulario.value.endereco,
+        this.formulario.value.complemento,
+        this.formulario.value.cidade,
+        this.formulario.value.estado,
+        this.formulario.value.cep
+      )
 
-    this._bd.cadastrarCliente(_cliente);
+      this._bd.cadastrarCliente(_cliente);
+    }
     
   }
 
@@ -75,10 +77,7 @@ export class IncluirClientesComponent implements OnInit {
   mascaraCEP(valor: any){
     
     let v:string  = valor.value
-    /*if(v.length == 5)
-    {
-      v += "-"
-    }*/
+    v = v.replace(/^(\d{5})(\d)/,"$1-$2")
     
     valor.value = v
   }

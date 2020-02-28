@@ -20,7 +20,8 @@ export class BD{
         firebase.database().ref("clientes").
         push(_cliente)
         .then(res =>{
-            console.log(res);            
+            alert("Usuário Cadastrado");    
+            this.router.navigate(['/menu']);          
         })
     }
 

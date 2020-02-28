@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../models/usuario'
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BD } from '../../services/bd.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { BD } from '../../services/bd.service';
 export class IncluirUsuarioComponent implements OnInit {
 
   formulario:FormGroup = new FormGroup({
-    'email':new FormControl(null),
+    'email':new FormControl(null,[Validators.required, Validators.email]),
     'senha': new FormControl(null)
   })
 
