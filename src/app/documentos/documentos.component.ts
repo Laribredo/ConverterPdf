@@ -63,7 +63,7 @@ export class DocumentosComponent implements OnInit {
 
     let myWindow;
     myWindow=window.open('','','width=1280,height=720');
-    myWindow.document.write("<html><head><style>  td{border: 1px solid}   </style></head><body>")
+    myWindow.document.write('<html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
     myWindow.document.write(document.querySelector("#tabela").innerHTML);
     myWindow.document.write("</body></html>")
 
@@ -71,8 +71,12 @@ export class DocumentosComponent implements OnInit {
     myWindow.document.close(); //missing code
 
 
-    myWindow.focus();
-    //myWindow.print(); 
+    // myWindow.focus();
+    // myWindow.print(); 
+
+      //document.body.appendChild(canvas)
+  };
+
     // var doc = new jsPDF('portrait', 'pt', 'a4'),
     // data = new Date();
     // var margins = {
@@ -91,7 +95,7 @@ export class DocumentosComponent implements OnInit {
     //     doc.save("Relatorio - "+data.getDate()+"/"+data.getMonth()+"/"+data.getFullYear()+".pdf");
     //   });
         // }
-  }
+  
 
    pdfConverter(pdfA:any): Promise<any>{
     var file = pdfA.files[0];
