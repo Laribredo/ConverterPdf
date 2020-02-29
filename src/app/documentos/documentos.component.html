@@ -11,87 +11,48 @@
                             <label>Escolha um arquivo PDF para a recuperação dos dados</label>
                             <input #pdf type="file" (change)="preencheValoresPdf(pdf)" formControlName="pdf">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-2 mb-3" >
+                            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" *ngIf="loading">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mb-3">
                             <label>Emissao</label>
                             <input type="text" class="form-control" required formControlName="emissao">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label>Nota Fiscal</label>
-                            <input type="text" class="form-control" placeholder="Nota Fiscal" formControlName="notaFiscal">
+                            <label>Certificado</label>
+                            <input type="text" class="form-control" required readonly formControlName="certificado">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Nota Fiscal *</label>
+                            <input type="text" class="form-control" formControlName="notaFiscal">
                         </div>
                         <div class="col-md-9 mb-3">
-                            <label>Clientes</label>
+                            <label>Clientes *</label>
                             <select multiple class="form-control" formControlName="Clientes">
                                 <option *ngFor="let cliente of _clientes" [ngValue]="cliente"> {{cliente.nome}} - {{cliente.cnpj}}</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Produto</label>
-                            <input type="text" class="form-control" placeholder="Produto" formControlName="produto">
+                            <input type="text" class="form-control" formControlName="produto">
                         </div>
                         <div class="col-md-5 mb-3">
                             <label>Desenho</label>
-                            <input type="text" class="form-control" placeholder="Desenho" formControlName="desenho">
+                            <input type="text" class="form-control"  formControlName="desenho">
                         </div>
                         <div class="col-md-9 mb-3">
-                            <label>O.P</label>
+                            <label>O.P *</label>
                             <input type="text" class="form-control" formControlName="op">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Liga</label>
-                            <input type="text" class="form-control" placeholder="Liga" formControlName="liga">
+                            <input type="text" class="form-control" formControlName="liga">
                         </div>
                         <div class="col-md-5 mb-3">
                             <label>Dureza/Tração</label>
-                            <input type="text" class="form-control" placeholder="Dureza/Tração" formControlName="durezaTracao">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label>Espessura</label>
-                            <input type="text" class="form-control" placeholder="Médidas" formControlName="espessuraMedidas">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label>Espessura Observação</label>
-                            <input type="text" class="form-control" placeholder="Observação" formControlName="espessuraObs">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label>Largura</label>
-                            <input type="text" class="form-control" placeholder="Médidas" formControlName="larguraMedidas">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label>Largura </label>
-                            <input type="text" class="form-control" placeholder="Observação" formControlName="larguraObs">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label>Dureza</label>
-                            <input type="text" class="form-control" placeholder="Médidas" formControlName="durezaMedidas">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label>Dureza </label>
-                            <input type="text" class="form-control" placeholder="Observação" formControlName="durezaObs">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label>Teste de Dobra</label>
-                            <input type="text" class="form-control" placeholder="Médidas" formControlName="testeMedidas">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label>Tesde de Dobra </label>
-                            <input type="text" class="form-control" placeholder="Observação" formControlName="testeObs">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label>Peso</label>
-                            <input type="text" class="form-control" placeholder="Médidas" formControlName="pesoMedidas">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label>Peso</label>
-                            <input type="text" class="form-control" placeholder="Observação" formControlName="pesoObs">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label>Ordem de Compra</label>
-                            <input type="text" class="form-control" placeholder="Médidas" formControlName="ocMedidas">
-                        </div>
-                        <div class="col-md-5 mb-3">
-                            <label>Ordem de Compra</label>
-                            <input type="text" class="form-control" placeholder="Observação" formControlName="ocObs">
+                            <input type="text" class="form-control" formControlName="durezaTracao">
                         </div>
                     </div>
                     <div class="form-row">
@@ -108,11 +69,11 @@
                             <input type="text" class="form-control" formControlName="corrida">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label>Liberado C.Q</label>
+                            <label>Liberado C.Q *</label>
                             <input type="text" class="form-control" formControlName="LiberadoCQ">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label>Conferido C.Q</label>
+                            <label>Conferido C.Q *</label>
                             <input type="text" class="form-control" formControlName="ConferidoCQ">
                         </div>
                     </div>
@@ -120,7 +81,7 @@
                 </form>
                 <div class="row">
                     <div class="col-md-7 offset-md-7">
-                        <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="teste(pdf)"> Gerar Preview </button>
+                        <button class="btn btn-primary" (click)="teste(pdf)"> Gerar Preview </button>
                     </div>
                 </div>
             </div>
@@ -142,94 +103,69 @@
                         CERTIFICADO GARANTIA DA QUALIDADE
                     </td>
                     <td colspan="1" class="font-weight-bold" style="padding: 15px 40px;">
-                        Nº Certificado
+                        Certificado Nº <span>{{formulario.value.certificado}}</span>
                     </td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Emissao</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">Thornton</td>
+                    <td colspan="5" class="text-left" id="emissao"  style="padding: 10px;">{{formulario.value.emissao}}</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Cliente</td>
-                    <td colspan="5" class="text-left" id="cliente" style="padding: 10px;">Fulano de Tal</td>
+                    <td colspan="5" class="text-left" id="cliente" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;">
+                        {{formulario.value.Clientes[0].nome}}
+                    </td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">CNPJ</td>
-                    <td colspan="5" class="text-left" id="cnpj" style="padding: 10px;">999999999/99999</td>
+                    <td colspan="5" class="text-left" id="cnpj" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;">
+                        {{formulario.value.Clientes[0].cnpj}}
+                    </td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Produto</td>
-                    <td colspan="5" class="text-left" id="cnpj" style="padding: 10px;">12345848</td>
+                    <td colspan="5" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.produto}}</td>
                 </tr>
                 <tr>
-                    <td colspan="1" class="font-weight-bold">Nota Fiscal</td>
-                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">12345848</td>
+                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">Nota Fiscal</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.notaFiscal}}</td>
                     <td colspan="1" class="font-weight-bold">Desenho</td>
-                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">12345848</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;"></td>
                     <td colspan="1" class="font-weight-bold">O.P</td>
-                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">99999999/99</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.op}}</td>
                 </tr>
                 <tr>
                     <td colspan="1" class="font-weight-bold">Liga</td>
-                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">12345848</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.liga}}</td>
                     <td colspan="1" class="font-weight-bold">Dureza/Tração</td>
-                    <td colspan="3" class="text-left" id="cnpj" style="padding: 10px;">12345848</td>
+                    <td colspan="3" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.durezaTracao}}</td>
                 </tr>
                 <tr>
                     <td colspan="3" class="font-weight-bold" style="padding: 10px;">Denominação</td>
                     <td colspan="1" class="font-weight-bold">Medidas Encontradas</td>
                     <td colspan="2" class="font-weight-bold">Observações</td>
                 </tr>
-                <tr>
-                    <td colspan="3">Espessura</td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">000MM</td>
-                    <td colspan="2" class="font-weight-bold">XXXXXXXXXX</td>
-                </tr>
-                <tr>
-                    <td colspan="3">Largura</td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">000MM</td>
-                    <td colspan="2" class="font-weight-bold">XXXXXXXXXX</td>
-                </tr>
-                <tr>
-                    <td colspan="3">Dureza</td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">000MM</td>
-                    <td colspan="2" class="font-weight-bold">XXXXXXXXXX</td>
-                </tr>
-                <tr>
-                    <td colspan="3">Teste de Obra</td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">000MM</td>
-                    <td colspan="2" class="font-weight-bold">XXXXXXXXXX</td>
-                </tr>
-                <tr>
-                    <td colspan="3">Peso</td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">000MM</td>
-                    <td colspan="2" class="font-weight-bold">XXXXXXXXXX</td>
-                </tr>
-                <tr>
-                    <td colspan="3">Ordem de Compra</td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">000MM</td>
-                    <td colspan="2" class="font-weight-bold">XXXXXXXXXX</td>
-                </tr>
+                <span id="testeaa"></span>
                 <tr>
                     <td colspan="8" style="height: 26vh;"></td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Análise Química</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">Thornton</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.analiseQuimica}}</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Observação</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">Thornton</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.obs}}</td>
                 </tr>
                 <tr>
-                    <td class="font-weight-bold">Corrida</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">Thornton</td>
+                    <td class="font-weight-bold" style="padding: 10px;">Corrida</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.corrida}}</td>
                 </tr>
                 <tr>
-                    <td class="font-weight-bold">Liberado C.Q</td>
-                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">Thornton</td>
+                    <td class="font-weight-bold" style="padding: 10px;">Liberado C.Q</td>
+                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.LiberadoCQ}}</td>
                     <td class="font-weight-bold">Conferido C.Q</td>
-                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">Thornton</td>
+                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.ConferidoCQ}}</td>
                 </tr>
             </table>
         </div>

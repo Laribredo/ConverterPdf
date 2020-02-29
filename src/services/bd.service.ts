@@ -25,6 +25,25 @@ export class BD{
         })
     }
 
+    getNCertificado(): Promise<any>{
+        console.log("aqui")
+        let _certificado: number;
+        return firebase.database().ref("certificado")
+            .once('value')
+            .then(res =>{
+                return res.val();
+            });        
+    }
+
+    setNCertificado(new1:number):Promise<any>{
+        return firebase.database()
+        .ref()
+        .update({"certificado": new1})
+        .then(res =>{
+            console.log(res);            
+        })
+    }
+
     cadastrarUsuario(_usuario: Usuario) : Promise<any>{
         return firebase.auth().createUserWithEmailAndPassword(_usuario.email, _usuario.senha)
         .then(res =>{

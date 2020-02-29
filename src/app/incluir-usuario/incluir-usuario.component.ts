@@ -23,12 +23,17 @@ export class IncluirUsuarioComponent implements OnInit {
   }
 
   cadastrarUsuario(){
-    let usuario = new Usuario(
-      this.formulario.value.email,
-      this.formulario.value.senha
-    )
+    if( this.formulario.status == "VALID")
+    {
+      let usuario = new Usuario(
+        this.formulario.value.email,
+        this.formulario.value.senha
+      )
+      this._bd.cadastrarUsuario(usuario)
+    }else{
+      alert("Revise os campos digitados");
+    }
 
-    this._bd.cadastrarUsuario(usuario)
 
     
   }

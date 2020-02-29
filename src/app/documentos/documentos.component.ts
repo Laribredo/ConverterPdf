@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import {Documentos} from '../../models/documentos'
 import * as PDFJS from 'pdfjs-dist/build/pdf';
 import html2canvas from 'html2canvas'; 
 import { Lexer } from '@angular/compiler';
 import {BD} from '../../services/bd.service'
 import { Clientes } from "../../models/clientes";
+import { DomSanitizer } from '@angular/platform-browser';
 declare const jsPDF:any
 
 PDFJS.GlobalWorkerOptions.workerSrc = './assets/js/pdf.worker.min.js';
@@ -21,42 +22,36 @@ export class DocumentosComponent implements OnInit {
   _oldPDF : any;
   public _clientes: Array<Clientes>
   _items: any = [];
+  htmlTabela:string = "";
+  htmlDom:any;
+  loading:boolean;
 
 
   public formulario:FormGroup = new FormGroup({
-    'pdf': new FormControl(null),    
-    'emissao': new FormControl(null),
-    'notaFiscal': new FormControl(null),
-    'Clientes': new FormControl(null),
+    'pdf': new FormControl(null,Validators.required),    
+    'emissao': new FormControl(null,Validators.required),
+    'certificado': new FormControl(null),
+    'notaFiscal': new FormControl(null,Validators.required),
+    'Clientes': new FormControl(null,Validators.required),
     'produto': new FormControl(null),
     'desenho': new FormControl(null),
-    'op': new FormControl(null),
+    'op': new FormControl(null,Validators.required),
     'liga': new FormControl(null),
     'durezaTracao': new FormControl(null),
-    'espessuraMedidas': new FormControl(null),
-    'espessuraObs': new FormControl(null),
-    'larguraMedidas': new FormControl(null),
-    'larguraObs': new FormControl(null),
-    'durezaMedidas': new FormControl(null),
-    'durezaObs': new FormControl(null),
-    'testeMedidas': new FormControl(null),
-    'testeObs': new FormControl(null),
-    'pesoMedidas': new FormControl(null),
-    'pesoObs': new FormControl(null),
-    'ocMedidas': new FormControl(null),
-    'ocObs': new FormControl(null),
     'analiseQuimica': new FormControl(null),
     'obs': new FormControl(null),
     'corrida': new FormControl(null),
-    'LiberadoCQ': new FormControl(null),
-    'ConferidoCQ': new FormControl(null)
+    'LiberadoCQ': new FormControl(null,Validators.required),
+    'ConferidoCQ': new FormControl(null,Validators.required)
   })
 
   constructor(
-   private _bd : BD
+   private _bd : BD,
+   private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
+    this.loading = false;
     this.preencheCamposForm();    
   }
 
@@ -64,40 +59,116 @@ export class DocumentosComponent implements OnInit {
   preencheCamposForm(){
     let data = new Date();
     this.formulario.controls['emissao'].setValue(data.getDate() + "/" +( (data.getMonth()+1) < 10 ? "0" + (data.getMonth()+1) : data.getMonth() ) + "/" + data.getFullYear())
-    this._bd.getClientes().then(res =>{
+     this._bd.getClientes().then(res =>{
       this._clientes = res       
     });
+    this._bd.getNCertificado().then(res =>{
+      this.formulario.controls['certificado'].setValue(res);      
+    })
   }
 
   async preencheValoresPdf(pdf:any)
   {
+    this.loading = true;
+    let possiveisCampos:Array<String> = Array<String>(new String(["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
+                           "CURVATURA LATERAL","OBSERVAÇÃO","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA"]));
+                           
 
-    // this.criarNovoPdf();
-    // console.log(this.formulario.value.Clientes);
+    let promise2 = await this.pdfConverter(pdf);
+    this._items = promise2;
 
-    let promise = await this.pdfConverter(pdf).then(res =>{
-      this._items = res;
-      console.log(res);        
-    });
-    // this.pdfConverter(pdf).then((res:Response) =>{
-    //  setTimeout(() => {
-    //    console.log(res);       
-    //  }, 500);
-      //this.formulario.controls['produto'].setValue(res[0].items[21])
-         
-  //  })
+
+    setTimeout(() => {
+
+      document.getElementById("testeaa").innerHTML = "";
+
+      this.formulario.controls['produto'].setValue(this._items[0].items[21].str);
+      //this.formulario.controls['op'].setValue(this._items[0].items[23].str);
+      this.formulario.controls['liga'].setValue(this._items[0].items[24].str);
+
+      if(possiveisCampos[0].indexOf(this._items[0].items[25].str) == -1)
+        this.formulario.controls['durezaTracao'].setValue(this._items[0].items[25].str)
+
+      let teste:string 
+      
+      console.log(this._items[0].items[this._items[0].items.length-3].str);
+      
+
+      if(this._items[0].items[this._items[0].items.length-3].str.search("ESTA EM PLENA CONFORMIDADE") === -1)
+      {
+        this.formulario.controls['corrida'].setValue(this._items[0].items[this._items[0].items.length-3].str)
+      }
+
+
+      console.log(this._items);
+        
+      for(let i = 0; i < this._items[0].items.length; i++)
+      {
+        document.hasChildNodes
+        //console.log(this._items[0].items[i].str);
+      
+
+          this.htmlDom  = document.createElement('tr');
+          let td = document.createElement('td');
+          let td2 = document.createElement('td');
+          let td3 = document.createElement('td');
+
+          if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && i < 36){
+            console.log(this._items[0].items[i].str);
+
+
+            td.colSpan = 3
+            td.innerText = this._items[0].items[i].str
+            td2.colSpan = 1 
+            td2.className = "font-weight-bold"
+            td.style.padding = "10px";
+            td2.innerText = this._items[0].items[i+1].str
+            td3.colSpan = 2
+
+            //Verifica se o proximo campo é um dos campos 
+            if(possiveisCampos[0].indexOf(this._items[0].items[i+2].str) != 1)            
+              td3.innerText = "";  
+            else
+              td3.innerText = this._items[0].items[i+2].str;;
+
+            this.htmlDom.append(td);
+            this.htmlDom.append(td2);
+            this.htmlDom.append(td3);
+
+            document.querySelector("#testeaa").append(this.htmlDom)
+          }
+
+        if( this._items[0].items[i].str =="ANÁLISE QUÍMICA" ){
+          this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
+          this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
+        }
+      }
+
+
+      console.log(this.htmlDom)
+  
+      this.loading = false;
+    }, 2000);
+
 
   }
 
   teste(pdf:any)
   {
 
-    this.criarNovoPdf();
-    console.log(this.formulario.value.Clientes);
-
-    this.pdfConverter(pdf).then(res =>{
-      console.log(res);      
-    })
+    if( this.formulario.status == "VALID")
+    {
+      this.criarNovoPdf();
+      console.log(this.formulario.value.Clientes[0]);
+      this._bd.setNCertificado(this.formulario.value.certificado+1).then(res =>{
+        console.log(res); 
+        this.formulario.controls['certificado'].setValue(this.formulario.value.certificado+1);     
+      })
+    }else
+      alert("Preencha os campos necessários")
+    // this.pdfConverter(pdf).then(res =>{
+    //   console.log(res);      
+    // })
   }
 
   criarNovoPdf(){
@@ -111,31 +182,9 @@ export class DocumentosComponent implements OnInit {
 
     myWindow.document.close(); //missing code
 
-
-    // myWindow.focus();
-    // myWindow.print(); 
-
-      //document.body.appendChild(canvas)
-  
-
-    // var doc = new jsPDF('portrait', 'pt', 'a4'),
-    // data = new Date();
-    // var margins = {
-    //   top: 40,
-    //   bottom: 60,
-    //   left: 40,
-    //   width: 1000
-    // };
-
-    // var codigoHTML = document.querySelector("#tabela");
-
-    // doc.fromHTML(codigoHTML,
-    //   margins.left, // x coord
-    //   margins.top, { pagesplit: true },
-    //   function(dispose){
-    //     doc.save("Relatorio - "+data.getDate()+"/"+data.getMonth()+"/"+data.getFullYear()+".pdf");
-    //   });
-        // }
+    setTimeout(() => {
+      myWindow.print()
+    }, 4000);
   
   }
   
@@ -146,7 +195,7 @@ export class DocumentosComponent implements OnInit {
     var fileReader = new FileReader(); 
     var typedarray : any; 
 
-    return new Promise((resolve,reject) =>{
+    return new Promise(resolve =>{
 
       let items: Array<any> = []
 
@@ -154,7 +203,7 @@ export class DocumentosComponent implements OnInit {
         //Step 4:turn array buffer into typed array
         typedarray = new Uint8Array(this.result as ArrayBuffer);
         
-          var pdfA = PDFJS.getDocument(typedarray)
+          var pdfA = PDFJS.getDocument(typedarray).promise
           return pdfA.then(function(pdf) { // get all pages text
             var texts;
             var maxPages = 1;
@@ -167,162 +216,11 @@ export class DocumentosComponent implements OnInit {
                 var textContent = page.getTextContent();
                 return textContent.then(function(text){
                   items.push(text);
-                  /*if(text.items.length < 100)
-                    return text;
-                  else  
-                    return text.items.map(function (s) { return s.str; }).join(''); // value page text */
                 });
               }));
             }
           });
         }
-
-        // function getValuesOldPdf(pdf : any){
-        //   var oldPdf = pdf;
-
-        //   let produto = "";
-        //   let desenho = "";
-        //   let liga = "";
-        //   let durezaTracao = "";
-        //   let analiseQuimicaCu = "";
-        //   let analiseQuimicaFe = "";
-        //   let analiseQuimicaZN = "";
-        //   let observacao = "";
-        //   let corrida = "";
-        //   let espessuraMedidas = "";
-        //   let espessuraOBS = "";
-        //   let larguraMedidas = "";
-        //   let larguraObs = "";
-        //   let durezaMedidas = "";
-        //   let durezaOBS = "";
-        //   let testeDeObraMedidas = "";
-        //   let testeDeDobraOBS = "";
-        //   let PesoMedidas = "";
-        //   let PesoOBS = "";
-
-
-        //   if(oldPdf[0].length > 100)
-        //   {
-        //     oldPdf = oldPdf[0];
-        //      produto = oldPdf.slice(oldPdf.search("PRODUTO")+7,oldPdf.search("NOTA FISCAL"));
-        //      desenho = oldPdf.slice(oldPdf.search("D E S E N H O")+13,oldPdf.search("O.P"));
-        //      liga = oldPdf.slice(oldPdf.search("LIGA")+4,oldPdf.search("DUREZA"));
-        //      durezaTracao = oldPdf.slice(oldPdf.search("DUREZA / TRAÇÃO")+15,oldPdf.search("DENOMINAÇÃO "));
-        //      analiseQuimicaCu = oldPdf.slice(oldPdf.search("ANÁLISE QUÍMICA CU=")+19,oldPdf.search("FE"));
-        //      analiseQuimicaFe = oldPdf.slice(oldPdf.search("FE=")+3,oldPdf.search("ZN"));
-        //      analiseQuimicaZN = oldPdf.slice(oldPdf.search("ZN=")+3,oldPdf.search("OBSERVAÇÃO"));
-        //      observacao = oldPdf.slice(oldPdf.search("OBSERVAÇÃO")+10,oldPdf.search("CORRIDA"));
-        //      corrida = oldPdf.slice(oldPdf.search("CORRIDA")+7,oldPdf.search("LIBERADO C.Q"));
-        //      espessuraMedidas = oldPdf.slice(oldPdf.search("ESPESSURA")+9,oldPdf.indexOf("MM", oldPdf.search("ESPESSURA"))) + " MM ";          
-        //      espessuraOBS = oldPdf.slice(oldPdf.indexOf("MM", oldPdf.search("ESPESSURA"))+2,oldPdf.search("LARGURA"));
-        //      larguraMedidas = oldPdf.slice(oldPdf.search("LARGURA")+7,oldPdf.indexOf("MM", oldPdf.search("LARGURA"))) + " MM ";
-        //      larguraObs = oldPdf.slice(oldPdf.indexOf("MM", oldPdf.search("LARGURA"))+2,oldPdf.indexOf("DUREZA", oldPdf.indexOf("LARGURA")));
-        //      durezaMedidas = oldPdf.slice(oldPdf.indexOf("DUREZA", oldPdf.search("LARGURA"))+6,oldPdf.indexOf("HRB", oldPdf.indexOf("LARGURA"))) + " HRB ";
-        //      durezaOBS = oldPdf.slice(oldPdf.indexOf("HRB", oldPdf.search("LARGURA"))+3, oldPdf.indexOf("TESTE DE DOBRA"));
-        //      testeDeObraMedidas = oldPdf.slice(oldPdf.search("TESTE DE DOBRA")+15, oldPdf.indexOf(" ", oldPdf.search("TESTE DE DOBRA")+15 ));
-        //      testeDeDobraOBS = oldPdf.slice(oldPdf.indexOf(" ", oldPdf.search("TESTE DE DOBRA")+15 ), oldPdf.search("PESO"));
-        //      PesoMedidas = oldPdf.slice(oldPdf.indexOf("PESO")+4, oldPdf.search("KG")) + " KG";
-        //      PesoOBS = oldPdf.slice(oldPdf.indexOf("KG")+2, oldPdf.search("ORDEM DE COMPRA")); 
-        //   }else{
-
-        //     console.log(oldPdf[0]);
-        //      produto = oldPdf[0].items[21].str;
-        //      liga = oldPdf[0].items[24].str;
-
-        //     if(oldPdf[0].items[25].str.search("HRB") != -1 )
-        //      durezaTracao = oldPdf[0].items[25].str;
-
-        //      espessuraMedidas = oldPdf[0].items[27].str;
-        //      espessuraOBS = "";
-
-        //     if(oldPdf[0].items[28].str != "LARGURA")
-        //        espessuraOBS = oldPdf[0].items[28];
-
-        //      larguraMedidas = oldPdf[0].items[29].str;    
-        //      larguraObs = ""
-
-        //     if(oldPdf[0].items[30].str != "DUREZA")
-        //       larguraObs = oldPdf[0].items[30].str;
-              
-        //      durezaMedidas = oldPdf[0].items[31].str 
-        //      durezaOBS = "" 
-            
-        //     if(oldPdf[0].items[32].str != "TESTE DE DOBRA")
-        //       durezaOBS = oldPdf[0].items[32].str;
-
-        //      testeDeObraMedidas = oldPdf[0].items[33].str;
-        //      testeDeDobraOBS = ""
-
-        //     if(oldPdf[0].items[34].str != "PESO")
-        //     testeDeDobraOBS = oldPdf[0].items[34].str;
-
-        //      PesoMedidas = oldPdf[0].items[35].str
-        //      PesoOBS = ""
-
-        //     if(oldPdf[0].items[36].str != "ORDEM DE COMPRA")
-        //       PesoOBS = oldPdf[0].items[36].str;            
-
-        //      analiseQuimicaCu =  oldPdf[0].items[43].str 
-        //      observacao = oldPdf[0].items[44].str 
-
-        //     if(!isNaN(oldPdf[0].items[45].str))
-        //     {
-        //       corrida = oldPdf[0].items[45].str;
-        //     }
-        
-             
-        //   }
-
-          
-        //   var documento = new Documentos("Cyprium","000000000");
-
-        //   let data1 = new Date();
-
-        //   document.querySelector("#emissao").innerHTML =  data1.getDate() + "/" +( (data1.getMonth()+1) < 10 ? "0" + (data1.getMonth()+1) : data1.getMonth() ) + "/" + data1.getFullYear();
-        //   document.querySelector("#produto").innerHTML = produto
-        //   document.querySelector("#desenho").innerHTML = desenho
-        //   document.querySelector("#liga").innerHTML = liga
-        //   document.querySelector("#durezaTracao").innerHTML = durezaTracao
-        //   document.querySelector("#espessuraMedidas").innerHTML = espessuraMedidas
-        //   document.querySelector("#espessuraObs").innerHTML = espessuraOBS;
-        //   document.querySelector("#larguraMedidas").innerHTML = larguraMedidas;
-        //   document.querySelector("#larguraObs").innerHTML = larguraObs;
-        //   document.querySelector("#durezaMedidas").innerHTML = durezaMedidas;
-        //   document.querySelector("#durezaObs").innerHTML = durezaOBS;
-        //   document.querySelector("#testeDeDobraMedidas").innerHTML = testeDeObraMedidas;
-        //   document.querySelector("#testeDeDobraObs").innerHTML = testeDeDobraOBS;
-        //   document.querySelector("#pesoMedidas").innerHTML = PesoMedidas;
-        //   document.querySelector("#pesoObs").innerHTML = PesoOBS;
-        //   document.querySelector("#corrida").innerHTML = corrida;
-        //   document.querySelector("#analiseQuimica").innerHTML = analiseQuimicaCu + " " + analiseQuimicaFe + " " + analiseQuimicaZN
-        //   document.querySelector("#observacao").innerHTML = observacao;
-
-
-
-
-        //   var doc = new jsPDF('portrait', 'pt', 'a4'),
-        //   data = new Date();
-        //   var margins = {
-        //     top: 40,
-        //     bottom: 60,
-        //     left: 40,
-        //     width: 1000
-        //   };
-
-        //   var codigoHTML = document.querySelector("#tabela");
-
-        //   doc.fromHTML(codigoHTML,
-        //     margins.left, // x coord
-        //     margins.top, { pagesplit: true },
-        //     function(dispose){
-        //     //doc.save("Relatorio - "+data.getDate()+"/"+data.getMonth()+"/"+data.getFullYear()+".pdf");
-        //     });
-        // }
-
-        // requestPDFJS(typedarray).then((tx) => {
-        //     getValuesOldPdf(tx);
-        // }); 
-    
 
       resolve(items);
 
