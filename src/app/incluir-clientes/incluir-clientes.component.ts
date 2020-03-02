@@ -16,6 +16,8 @@ import * as firebase from 'firebase'
 })
 export class IncluirClientesComponent implements OnInit {
 
+  _clientes:Clientes;
+
   public formulario: FormGroup = new FormGroup({
     'nome': new FormControl(null, [Validators.required]),
     'cnpj': new FormControl(null, [Validators.required]),
@@ -33,6 +35,9 @@ export class IncluirClientesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this._bd.getClientes().then(res =>{
+      this._clientes = res       
+    });
   }
 
   cadastrarCliente(){

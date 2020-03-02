@@ -36,6 +36,7 @@ export class DocumentosComponent implements OnInit {
     'produto': new FormControl(null),
     'desenho': new FormControl(null),
     'op': new FormControl(null,Validators.required),
+    'ordemCompra': new FormControl(null,Validators.required),
     'liga': new FormControl(null),
     'durezaTracao': new FormControl(null),
     'analiseQuimica': new FormControl(null),
@@ -67,19 +68,35 @@ export class DocumentosComponent implements OnInit {
     })
   }
 
+  clearForm(){
+    this.formulario.controls['corrida'].setValue("");
+    this.formulario.controls['notaFiscal'].setValue("");
+    this.formulario.controls['produto'].setValue("");
+    this.formulario.controls['desenho'].setValue("");
+    this.formulario.controls['op'].setValue("");
+    this.formulario.controls['ordemCompra'].setValue("");
+    this.formulario.controls['liga'].setValue("");
+    this.formulario.controls['durezaTracao'].setValue("");
+    this.formulario.controls['analiseQuimica'].setValue("");
+    this.formulario.controls['obs'].setValue("");
+    this.formulario.controls['corrida'].setValue("");
+    this.formulario.controls['LiberadoCQ'].setValue("");
+    this.formulario.controls['ConferidoCQ'].setValue("");
+  }
+
+
   async preencheValoresPdf(pdf:any)
   {
+    this.clearForm();
     this.loading = true;
     let possiveisCampos:Array<String> = Array<String>(new String(["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
-                           "CURVATURA LATERAL","OBSERVAÇÃO","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA"]));
+                           "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA"]));
                            
 
     let promise2 = await this.pdfConverter(pdf);
     this._items = promise2;
 
-
     setTimeout(() => {
-
       document.getElementById("testeaa").innerHTML = "";
 
       this.formulario.controls['produto'].setValue(this._items[0].items[21].str);
@@ -93,58 +110,64 @@ export class DocumentosComponent implements OnInit {
       
       console.log(this._items[0].items[this._items[0].items.length-3].str);
       
-
-      if(this._items[0].items[this._items[0].items.length-3].str.search("ESTA EM PLENA CONFORMIDADE") === -1)
+      if(this._items.length > 1)
       {
-        this.formulario.controls['corrida'].setValue(this._items[0].items[this._items[0].items.length-3].str)
-      }
 
-
-      console.log(this._items);
-        
-      for(let i = 0; i < this._items[0].items.length; i++)
+      }else
       {
-        document.hasChildNodes
-        //console.log(this._items[0].items[i].str);
-      
-
-          this.htmlDom  = document.createElement('tr');
-          let td = document.createElement('td');
-          let td2 = document.createElement('td');
-          let td3 = document.createElement('td');
-
-          if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && i < 36){
-            console.log(this._items[0].items[i].str);
+        if(this._items[0].items[this._items[0].items.length-3].str.search("ESTA EM PLENA CONFORMIDADE") === -1)
+        {
+          this.formulario.controls['corrida'].setValue(this._items[0].items[this._items[0].items.length-3].str)
+        }
 
 
-            td.colSpan = 3
-            td.innerText = this._items[0].items[i].str
-            td2.colSpan = 1 
-            td2.className = "font-weight-bold"
-            td.style.padding = "10px";
-            td2.innerText = this._items[0].items[i+1].str
-            td3.colSpan = 2
+        console.log(this._items);
+          
+        for(let i = 0; i < this._items[0].items.length; i++)
+        {
+          document.hasChildNodes
+          //console.log(this._items[0].items[i].str);
 
-            //Verifica se o proximo campo é um dos campos 
-            if(possiveisCampos[0].indexOf(this._items[0].items[i+2].str) != 1)            
-              td3.innerText = "";  
-            else
-              td3.innerText = this._items[0].items[i+2].str;;
 
-            this.htmlDom.append(td);
-            this.htmlDom.append(td2);
-            this.htmlDom.append(td3);
+            this.htmlDom  = document.createElement('tr');
+            let td = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
 
-            document.querySelector("#testeaa").append(this.htmlDom)
+            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && this._items[0].items[i].str != possiveisCampos[0].indexOf("ORDEM DE COMPRA") ){
+              td.colSpan = 3
+              td.innerText = this._items[0].items[i].str
+              td2.colSpan = 1 
+              td2.className = "font-weight-bold"
+              td.style.padding = "10px";
+              td2.innerText = this._items[0].items[i+1].str
+              td3.colSpan = 2
+
+              //Verifica se o proximo campo é um dos campos 
+              if(possiveisCampos[0].indexOf(this._items[0].items[i+2].str) != 1)            
+                td3.innerText = "";  
+              else
+                td3.innerText = this._items[0].items[i+2].str;;
+
+              this.htmlDom.append(td);
+              this.htmlDom.append(td2);
+              this.htmlDom.append(td3);
+
+              document.querySelector("#testeaa").append(this.htmlDom)
+            }
+
+          if( this._items[0].items[i].str =="ANÁLISE QUÍMICA" ){
+            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
+            this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
           }
 
-        if( this._items[0].items[i].str =="ANÁLISE QUÍMICA" ){
-          this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
-          this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
+          if( this._items[0].items[i].str =="OBSERVACAO" && i < 40  ){
+            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
+            this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
+          }
         }
-      }
 
-
+    }
       console.log(this.htmlDom)
   
       this.loading = false;
@@ -175,7 +198,7 @@ export class DocumentosComponent implements OnInit {
 
     let myWindow;
     myWindow=window.open('','','width=1000,height=900');
-    myWindow.document.write('<html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
+    myWindow.document.write('<html><head><style>tr td { border: 2px solid black; color: black;}</style><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
     myWindow.document.write(document.querySelector("#tabela").innerHTML);
     myWindow.document.write("</body></html>")
 
@@ -206,7 +229,7 @@ export class DocumentosComponent implements OnInit {
           var pdfA = PDFJS.getDocument(typedarray).promise
           return pdfA.then(function(pdf) { // get all pages text
             var texts;
-            var maxPages = 1;
+            var maxPages = pdf.numPages;
             var countPromises = []; // collecting all page promises
             for (var j = 1; j <= maxPages; j++) {
               var page = pdf.getPage(j);

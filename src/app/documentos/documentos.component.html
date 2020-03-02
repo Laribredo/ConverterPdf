@@ -46,6 +46,10 @@
                             <label>O.P *</label>
                             <input type="text" class="form-control" formControlName="op">
                         </div>
+                        <div class="col-md-9 mb-3">
+                            <label>Ordem de Compra *</label>
+                            <input type="text" class="form-control" formControlName="ordemCompra">
+                        </div>
                         <div class="col-md-4 mb-3">
                             <label>Liga</label>
                             <input type="text" class="form-control" formControlName="liga">
@@ -65,7 +69,7 @@
                             <input type="text" class="form-control" formControlName="obs">
                         </div>
                         <div class="col-md-9 mb-3">
-                            <label>Corrida</label>
+                            <label>Corrida Nº</label>
                             <input type="text" class="form-control" formControlName="corrida">
                         </div>
                         <div class="col-md-4 mb-3">
@@ -149,6 +153,17 @@
                 </tr>
                 <span id="testeaa"></span>
                 <tr>
+                    <td colspan="3" style="padding: 10px;">
+                        Ordem de Compra
+                    </td>
+                    <td colspan="1" class="font-weight-bold">
+                        {{formulario.value.ordemCompra}}
+                    </td>
+                    <td colspan="2">
+
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="8" style="height: 26vh;"></td>
                 </tr>
                 <tr>
@@ -160,7 +175,7 @@
                     <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.obs}}</td>
                 </tr>
                 <tr>
-                    <td class="font-weight-bold" style="padding: 10px;">Corrida</td>
+                    <td class="font-weight-bold" style="padding: 10px;">Corrida Nº</td>
                     <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.corrida}}</td>
                 </tr>
                 <tr>
