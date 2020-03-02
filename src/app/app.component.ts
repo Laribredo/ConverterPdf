@@ -7,7 +7,7 @@ import * as firebase from 'firebase';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'PdfConverter';
+  title = 'Cyprium Metalurgica | Cerificado de Qualidade';
 
   ngOnInit(){
     var firebaseConfig = {

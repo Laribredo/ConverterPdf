@@ -58,7 +58,7 @@ export class DocumentosComponent implements OnInit {
 
   preencheCamposForm(){
     let data = new Date();
-    this.formulario.controls['emissao'].setValue(data.getDate() + "/" +( (data.getMonth()+1) < 10 ? "0" + (data.getMonth()+1) : data.getMonth() ) + "/" + data.getFullYear())
+    this.formulario.controls['emissao'].setValue((data.getDate() < 10 ? "0" + (data.getDate()+1) : data.getDate()) + "/" +( (data.getMonth()+1) < 10 ? "0" + (data.getMonth()+1) : data.getMonth() ) + "/" + data.getFullYear())
      this._bd.getClientes().then(res =>{
       this._clientes = res       
     });
@@ -184,7 +184,7 @@ export class DocumentosComponent implements OnInit {
 
     setTimeout(() => {
       myWindow.print()
-    }, 4000);
+    }, 2000);
   
   }
   

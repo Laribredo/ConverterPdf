@@ -11,7 +11,7 @@
                             <label>Escolha um arquivo PDF para a recuperação dos dados</label>
                             <input #pdf type="file" (change)="preencheValoresPdf(pdf)" formControlName="pdf">
                         </div>
-                        <div class="col-md-2 mb-3" >
+                        <div class="col-md-2 mb-3">
                             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" *ngIf="loading">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-5 mb-3">
                             <label>Desenho</label>
-                            <input type="text" class="form-control"  formControlName="desenho">
+                            <input type="text" class="form-control" formControlName="desenho">
                         </div>
                         <div class="col-md-9 mb-3">
                             <label>O.P *</label>
@@ -81,7 +81,7 @@
                 </form>
                 <div class="row">
                     <div class="col-md-7 offset-md-7">
-                        <button class="btn btn-primary" (click)="teste(pdf)"> Gerar Preview </button>
+                        <button class="btn btn-primary" (click)="teste(pdf)"> Gerar Certificado </button>
                     </div>
                 </div>
             </div>
@@ -94,9 +94,11 @@
             <table border="1" class="text-center" wi>
                 <tr>
                     <td colspan="1" style="line-height: 1.1;padding: 15px 40px;">
-                        <span class="font-weight-bold" style="font-size: 30px;">CYPRIUM</span>
-                        <span style="font-size: 11px; font-weight: 1px;">
-                            <BR>METALURGICA LTDA <br> CNPJ 11.275.029/0001-00
+                        <span class="font-weight-bold" style="font-size: 30px;">
+                            <img src="./../../assets/logo-final-06.png" alt="" srcset="" width="93" style="margin-bottom: 6px;">
+                        </span>
+                        <span style="font-size: 10px; font-weight: 1px;">
+                            <BR> 11.275.029/0001-00
                         </span>
                     </td>
                     <td colspan="4" class="font-weight-bold" style="font-size: 25px;padding: 1px 84px;">
@@ -108,7 +110,7 @@
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Emissao</td>
-                    <td colspan="5" class="text-left" id="emissao"  style="padding: 10px;">{{formulario.value.emissao}}</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.emissao}}</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Cliente</td>
