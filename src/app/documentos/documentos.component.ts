@@ -144,7 +144,7 @@ export class DocumentosComponent implements OnInit {
               td3.colSpan = 2
 
               //Verifica se o proximo campo é um dos campos 
-              if(possiveisCampos[0].indexOf(this._items[0].items[i+2].str) != 1)            
+              if(possiveisCampos[0].indexOf(this._items[0].items[i+3].str) == -1)            
                 td3.innerText = "";  
               else
                 td3.innerText = this._items[0].items[i+2].str;;
