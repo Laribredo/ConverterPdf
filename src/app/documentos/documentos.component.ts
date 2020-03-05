@@ -134,7 +134,7 @@ export class DocumentosComponent implements OnInit {
             let td2 = document.createElement('td');
             let td3 = document.createElement('td');
 
-            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && this._items[0].items[i].str != possiveisCampos[0].indexOf("ORDEM DE COMPRA") ){
+            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && "ORDEM DE COMPRA" != this._items[0].items[i].str){
               td.colSpan = 3
               td.innerText = this._items[0].items[i].str
               td2.colSpan = 1 
@@ -142,6 +142,7 @@ export class DocumentosComponent implements OnInit {
               td.style.padding = "10px";
               td2.innerText = this._items[0].items[i+1].str
               td3.colSpan = 2
+              td3.style.borderRight = " 7px solid black";
 
               //Verifica se o proximo campo é um dos campos 
               if(possiveisCampos[0].indexOf(this._items[0].items[i+3].str) == -1)            
@@ -198,7 +199,7 @@ export class DocumentosComponent implements OnInit {
 
     let myWindow;
     myWindow=window.open('','','width=1000,height=900');
-    myWindow.document.write('<html><head><style>tr td { border: 2px solid black; color: black;}</style><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
+    myWindow.document.write('<html><head><style>tr td { border: 1px solid black; color: black;}</style><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
     myWindow.document.write(document.querySelector("#tabela").innerHTML);
     myWindow.document.write("</body></html>")
 

@@ -92,45 +92,49 @@
         </div>
     </div>
 </div>
-<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel">
+    <!-- <div> -->
     <div class="modal-dialog modal-xl">
         <div id="tabela" class="modal-content">
-            <table border="1" class="text-center" wi>
+            <table border="1" class="text-center" style="font-weight: 700; border: 7px solid black;">
                 <tr>
-                    <td colspan="1" style="line-height: 1.1;padding: 15px 40px;">
+                    <td colspan="1" style="line-height: 1.1;padding: 15px 40px; border-right-color:transparent; ">
                         <span class="font-weight-bold" style="font-size: 30px;">
-                            <img src="./../../assets/logo-final-06.png" alt="" srcset="" width="93" style="margin-bottom: 6px;">
+                            <img src="./../../assets/logo-final-06.png" alt="" srcset="" width="113" style="margin-bottom: 6px;">
                         </span>
                         <span style="font-size: 10px; font-weight: 1px;">
-                            <BR> 11.275.029/0001-00
+                            <BR>CNPJ 11.275.029/0001-00
                         </span>
                     </td>
-                    <td colspan="4" class="font-weight-bold" style="font-size: 25px;padding: 1px 84px;">
-                        CERTIFICADO GARANTIA DA QUALIDADE
+                    <td colspan="4" class="font-weight-bold" style="font-size: 25px;padding: 1px 84px; border-right: transparent;">
+                        GARANTIA DE QUALIDADE
                     </td>
-                    <td colspan="1" class="font-weight-bold" style="padding: 15px 40px;">
-                        Certificado Nº <span>{{formulario.value.certificado}}</span>
+                    <td colspan="1" class="font-weight-bold" style="padding: 15px 40px; border-right: 7px solid black; border-left-color: transparent; font-size: 25px; ">
+                        Certificado Nº <br><span>{{formulario.value.certificado}}</span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="font-weight-bold">Emissao</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.emissao}}</td>
+                    <td class="font-weight-bold">Emissão</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.emissao}}</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Cliente</td>
-                    <td colspan="5" class="text-left" id="cliente" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;">
+                    <td colspan="5" class="text-left" id="cliente" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;  border-right: 7px solid black;">
                         {{formulario.value.Clientes[0].nome}}
                     </td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">CNPJ</td>
-                    <td colspan="5" class="text-left" id="cnpj" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;">
+                    <td colspan="5" class="text-left" id="cnpj" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;  border-right: 7px solid black;">
                         {{formulario.value.Clientes[0].cnpj}}
                     </td>
                 </tr>
                 <tr>
+                    <td colspan="8" style="height: 5vh;"></td>
+                </tr>
+                <tr>
                     <td class="font-weight-bold">Produto</td>
-                    <td colspan="5" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.produto}}</td>
+                    <td colspan="5" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.produto}}</td>
                 </tr>
                 <tr>
                     <td colspan="1" class="font-weight-bold" style="padding: 10px;">Nota Fiscal</td>
@@ -138,28 +142,31 @@
                     <td colspan="1" class="font-weight-bold">Desenho</td>
                     <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;"></td>
                     <td colspan="1" class="font-weight-bold">O.P</td>
-                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.op}}</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.op}}</td>
                 </tr>
                 <tr>
                     <td colspan="1" class="font-weight-bold">Liga</td>
                     <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.liga}}</td>
                     <td colspan="1" class="font-weight-bold">Dureza/Tração</td>
-                    <td colspan="3" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.durezaTracao}}</td>
+                    <td colspan="3" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.durezaTracao}}</td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="height: 5vh;"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="font-weight-bold" style="padding: 10px;">Denominação</td>
                     <td colspan="1" class="font-weight-bold">Medidas Encontradas</td>
-                    <td colspan="2" class="font-weight-bold">Observações</td>
+                    <td colspan="2" class="font-weight-bold" style=" border-right: 7px solid black;">Observações</td>
                 </tr>
                 <span id="testeaa"></span>
                 <tr>
                     <td colspan="3" style="padding: 10px;">
-                        Ordem de Compra
+                        ORDEM DE COMPRA
                     </td>
                     <td colspan="1" class="font-weight-bold">
                         {{formulario.value.ordemCompra}}
                     </td>
-                    <td colspan="2">
+                    <td colspan="2" style=" border-right: 7px solid black;">
 
                     </td>
                 </tr>
@@ -168,21 +175,21 @@
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Análise Química</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.analiseQuimica}}</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.analiseQuimica}}</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Observação</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.obs}}</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.obs}}</td>
                 </tr>
                 <tr>
-                    <td class="font-weight-bold" style="padding: 10px;">Corrida Nº</td>
-                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.corrida}}</td>
+                    <td class="font-weight-bold" style="padding: 10px;">Corrida N°</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.corrida}}</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold" style="padding: 10px;">Liberado C.Q</td>
                     <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.LiberadoCQ}}</td>
                     <td class="font-weight-bold">Conferido C.Q</td>
-                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.ConferidoCQ}}</td>
+                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.ConferidoCQ}}</td>
                 </tr>
             </table>
         </div>
