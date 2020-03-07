@@ -4,6 +4,7 @@ import {DocumentosComponent} from './documentos/documentos.component';
 import {MenuComponent} from './menu/menu.component'
 import {IncluirClientesComponent} from  './incluir-clientes/incluir-clientes.component'
 import {IncluirUsuarioComponent} from './incluir-usuario/incluir-usuario.component'
+import {CertificadosComponent} from './certificados/certificados.component'
 import {LoginComponent} from './login/login.component'
 import {AuthGuard} from './auth.guard'
 
@@ -13,7 +14,8 @@ const routes: Routes = [
   {path:'', component: LoginComponent},
   {path:'incluir-clientes', component:IncluirClientesComponent},
   {path:'incluir-usuario', component:IncluirUsuarioComponent,canActivate:[AuthGuard] },
-  {path:'login', component:LoginComponent}
+  {path:'login', component:LoginComponent},
+  {path:'certificados', component:CertificadosComponent}
 ];
 
 @NgModule({

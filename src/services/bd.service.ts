@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import { Clientes } from "../models/clientes";
+import { Certificado } from "../models/certificados";
 import { Usuario } from "../models/usuario";
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
@@ -54,12 +55,28 @@ export class BD{
         })
     }
 
+    alterarSenha(senhaAntiga:any,senha:any): Promise<any>{
+
+        return firebase.auth().signInWithEmailAndPassword(localStorage.getItem('email'),senhaAntiga)
+        .then(res =>{
+            firebase.auth().currentUser.updatePassword(senha).then(res =>{
+                alert("Troca de Senha Efetuada");
+                this.router.navigate(['/menu']);
+            })         
+        }).catch((error) =>{
+            console.log(error);
+            alert("A Senha Antiga não é semalhante a atual")
+        })
+    }
+
+    
     autenticar(email:string, senha:string):Promise<any>{
         return firebase.auth().signInWithEmailAndPassword(email, senha)
         .then(res =>{
             firebase.auth().currentUser.getIdToken().then(res =>{
                 this.id_token = res
                 localStorage.setItem('idToken', this.id_token)
+                localStorage.setItem('email',email);
                 this.router.navigate(['/menu'])
             })         
         })
@@ -107,14 +124,30 @@ export class BD{
         })
     }
 
-    gerarCertificado(_cliente: Clientes){
-        console.log("cadastro");
-        
-        firebase.database().ref("clientes").
-        push(_cliente)
-        .then(res =>{
-            alert("Usuário Cadastrado");    
-            this.router.navigate(['/menu']);          
+    gerarCertificado(_certificado: Certificado){
+        firebase.database().ref("certificadosGerados").
+        push(_certificado)
+        .then(()=>{
+            console.log("certificado criado;");
+            
+        })
+    }
+
+    getCertificados(){
+        return new Promise((resolve,reject) =>{
+            let _certificado: Array<Certificado> = []
+
+            firebase.database().ref("certificadosGerados")
+            .orderByKey()
+            .once('value')
+            .then(res =>{
+                res.forEach(cl =>{
+                    _certificado.push(new Certificado(cl.val().nomeCliente,cl.val().cnpj,cl.val().numeroCertificado,cl.val().dataEmissao))
+                }) 
+            });
+
+            resolve(_certificado.reverse());
+
         })
     }
 

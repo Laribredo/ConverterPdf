@@ -68,3 +68,16 @@
 .row {
     padding-top: 30px;
 }
+
+
+.card-counter.warning {
+    box-shadow: 2px 2px 10px #DADADA;
+    margin: 5px;
+    padding: 20px 10px;
+    background-color: #ffb836;
+    height: 100px;
+    border-radius: 5px;
+    -webkit-transition: .3s linear all;
+    transition: .3s linear all;
+    color: white;
+}

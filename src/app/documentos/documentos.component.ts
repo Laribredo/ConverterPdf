@@ -7,6 +7,7 @@ import { Lexer } from '@angular/compiler';
 import {BD} from '../../services/bd.service'
 import { Clientes } from "../../models/clientes";
 import { DomSanitizer } from '@angular/platform-browser';
+import {Certificado} from "../../models/certificados";
 declare const jsPDF:any
 
 PDFJS.GlobalWorkerOptions.workerSrc = './assets/js/pdf.worker.min.js';
@@ -27,7 +28,6 @@ export class DocumentosComponent implements OnInit {
   loading:boolean;
   filtro:any;
 
-
   public formulario:FormGroup = new FormGroup({
     'pdf': new FormControl(null,Validators.required),    
     'emissao': new FormControl(null,Validators.required),
@@ -37,7 +37,7 @@ export class DocumentosComponent implements OnInit {
     'produto': new FormControl(null),
     'desenho': new FormControl(null),
     'op': new FormControl(null,Validators.required),
-    'ordemCompra': new FormControl(null,Validators.required),
+    'ordemCompra': new FormControl(null),
     'liga': new FormControl(null),
     'durezaTracao': new FormControl(null),
     'analiseQuimica': new FormControl(null),
@@ -92,7 +92,7 @@ export class DocumentosComponent implements OnInit {
     this.clearForm();
     this.loading = true;
     let possiveisCampos:Array<String> = Array<String>(new String(["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
-                           "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA"]));
+                           "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA","OBSERVAÇÃO"]));
                            
 
     let promise2 = await this.pdfConverter(pdf);
@@ -136,7 +136,7 @@ export class DocumentosComponent implements OnInit {
             let td2 = document.createElement('td');
             let td3 = document.createElement('td');
 
-            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && "ORDEM DE COMPRA" != this._items[0].items[i].str){
+            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && "ORDEM DE COMPRA" != this._items[0].items[i].str ){
               td.colSpan = 3
               td.innerText = this._items[0].items[i].str
               td2.colSpan = 1 
@@ -164,7 +164,7 @@ export class DocumentosComponent implements OnInit {
             this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
           }
 
-          if( this._items[0].items[i].str =="OBSERVACAO" && i < 40  ){
+          if( this._items[0].items[i].str =="OBSERVACAO" && i < (this._items[0].items.length - 10)  ){
             this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
             this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
           }
@@ -186,10 +186,15 @@ export class DocumentosComponent implements OnInit {
     {
       this.criarNovoPdf();
       console.log(this.formulario.value.Clientes[0]);
+
+      let _certificado = new Certificado(this.formulario.value.Clientes[0].nome,this.formulario.value.Clientes[0].cnpj,this.formulario.value.certificado,this.formulario.value.emissao);
+      this._bd.gerarCertificado(_certificado)
+
       this._bd.setNCertificado(this.formulario.value.certificado+1).then(res =>{
         console.log(res); 
         this.formulario.controls['certificado'].setValue(this.formulario.value.certificado+1);     
-      })
+      });
+
     }else
       alert("Preencha os campos necessários")
     // this.pdfConverter(pdf).then(res =>{

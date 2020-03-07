@@ -12,7 +12,8 @@ export class IncluirUsuarioComponent implements OnInit {
 
   formulario:FormGroup = new FormGroup({
     'email':new FormControl(null,[Validators.required, Validators.email]),
-    'senha': new FormControl(null)
+    'senha': new FormControl(null),
+    'senhaAntiga': new FormControl(null)
   })
 
   constructor(
@@ -33,9 +34,17 @@ export class IncluirUsuarioComponent implements OnInit {
     }else{
       alert("Revise os campos digitados");
     }
+  }
 
-
-    
+  alterarSenha(){
+    if(this.formulario.value.senha.length == 0)
+    {
+      alert("O campo senha não pode estar vazio para a alteração de senha")
+    }else{
+      this._bd.alterarSenha(this.formulario.value.senhaAntiga,this.formulario.value.senha).then(res =>{
+        console.log(res);
+      })
+    }
   }
 
 }
