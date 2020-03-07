@@ -7,6 +7,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Clientes } from '../../models/clientes';
 import {BD} from '../../services/bd.service'
 import * as firebase from 'firebase'
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @Component({
   selector: 'app-incluir-clientes',
@@ -17,6 +18,9 @@ import * as firebase from 'firebase'
 export class IncluirClientesComponent implements OnInit {
 
   _clientes:Clientes;
+  filtro: any;
+  editando:boolean = false;
+  editClient:Clientes;
 
   public formulario: FormGroup = new FormGroup({
     'nome': new FormControl(null, [Validators.required]),
@@ -43,25 +47,70 @@ export class IncluirClientesComponent implements OnInit {
   cadastrarCliente(){
     
     console.log("cadastrarCliente");
-    if( this.formulario.status == "VALID")
+    if( this.formulario.status == "VALID" )
     {
-
-      let _cliente = new Clientes(
-        this.formulario.value.nome,
-        this.formulario.value.cnpj,
-        this.formulario.value.endereco,
-        this.formulario.value.complemento,
-        this.formulario.value.cidade,
-        this.formulario.value.estado,
-        this.formulario.value.cep
-      )
-
-      this._bd.cadastrarCliente(_cliente);
+      if(!this.editando)
+      {
+        let _cliente = new Clientes(
+          null,
+          this.formulario.value.nome,
+          this.formulario.value.cnpj,
+          this.formulario.value.endereco,
+          this.formulario.value.complemento,
+          this.formulario.value.cidade,
+          this.formulario.value.estado,
+          this.formulario.value.cep
+        )
+  
+        this._bd.cadastrarCliente(_cliente);
+      }else
+      {
+        this.editClient.nome = this.formulario.value.nome
+        this.editClient.cnpj = this.formulario.value.cnpj
+        this.editClient.endereco = this.formulario.value.endereco
+        this.editClient.complemente = this.formulario.value.complemento
+        this.editClient.cidade = this.formulario.value.cidade
+        this.editClient.estado = this.formulario.value.estado
+        this.editClient.cep = this.formulario.value.cep
+        this.editando = false;
+        this._bd.updateClientes(this.editClient);
+      }
     }else{
       alert("Preencha os Campos Necessários")
     }
     
   }
+
+
+  editarClientes(_cliente:Clientes)
+  {
+    this.formulario.controls["nome"].setValue(_cliente.nome);
+    this.formulario.controls["cnpj"].setValue(_cliente.cnpj);
+    this.formulario.controls["cep"].setValue(_cliente.cep);
+    this.formulario.controls["endereco"].setValue(_cliente.endereco);
+    this.formulario.controls["complemento"].setValue(_cliente.complemente);
+    this.formulario.controls["cidade"].setValue(_cliente.cidade);
+    this.formulario.controls["estado"].setValue(_cliente.estado);
+
+    console.log(_cliente.key);
+    this.editando = true;
+    this.editClient = _cliente;
+    
+  }
+
+  excluirClientes(_cliente:Clientes)
+  {
+    let c =  confirm("Você tem certeza que deseja exluir esse cliente?");
+
+    if(c)
+      this._bd.deleteClientes(_cliente)
+
+    this._bd.getClientes().then(res =>{
+      this._clientes = res       
+    }); 
+    
+  }
+
 
   mascaraCNPJ(valor: any)
   {

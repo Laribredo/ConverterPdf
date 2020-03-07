@@ -13,7 +13,8 @@ import { LoginComponent } from './login/login.component';
 import { IncluirClientesComponent } from './incluir-clientes/incluir-clientes.component';
 import { IncluirUsuarioComponent } from './incluir-usuario/incluir-usuario.component';
 import { AuthGuard } from './auth.guard'
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { CertificadosComponent } from './certificados/certificados.component';
 
 @NgModule({
   declarations: [
@@ -22,14 +23,16 @@ import { AuthGuard } from './auth.guard'
     DocumentosComponent,
     LoginComponent,
     IncluirClientesComponent,
-    IncluirUsuarioComponent
+    IncluirUsuarioComponent,
+    CertificadosComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    Ng2SearchPipeModule
   ],
   providers: [BD, AuthGuard, appService],
   bootstrap: [AppComponent]

@@ -39,43 +39,39 @@
             </form>
         </div>
     </div>
-</div>
-
-<!-- <div class="col-10">
-            <div class="row">
-                <div class="col-5">
-                    <h4>Clientes Cadastrados</h4>
-                </div>
-                <div class="col-5">
-                    <form class="form-inline">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                </div> -->
-<!-- <div class="col-12">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nome da Empresa</th>
-                                <th scope="col">CNPJ</th>
-                            </tr>
-                        </thead>
-                        <tbody *ngFor="let c of _clientes; let i= index">
-                            <tr>
-                                <th scope="row">{{i}}</th>
-                                <td>{{c.nome}}</td>
-                                <td>{{c.cnpj}}</td>
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-warning">Editar</button>
-                                        <button type="button" class="btn btn-danger">Excluir</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
-<!-- </div>
+    <div class="col-10">
+        <div class="row">
+            <div class="col-7 marginB">
+                <h4>Clientes Cadastrados</h4>
+            </div>
+            <div class="col-5">
+                <input class="form-control mr-sm-2" type="search" placeholder="Buscar Cliente" [(ngModel)]="filtro"  aria-label="Search">
+            </div>
+            <div class="col-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nome da Empresa</th>
+                            <th scope="col">CNPJ</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let c of _clientes | filter:filtro; let i= index;">
+                        <tr>
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{c.nome}}</td>
+                            <td>{{c.cnpj}}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-warning" (click)="editarClientes(c)">Editar</button>
+                                    <button type="button" class="btn btn-danger" (click)="excluirClientes(c)">Excluir</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div> -->
+    </div>
+</div>    

@@ -10,3 +10,8 @@ h3{
 input.ng-invalid.ng-touched {
     border: 1px solid red;
 }
+
+
+.marginB{
+    margin-bottom: 10px;
+}

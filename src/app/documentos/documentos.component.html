@@ -29,10 +29,19 @@
                             <input type="text" class="form-control" formControlName="notaFiscal">
                         </div>
                         <div class="col-md-9 mb-3">
-                            <label>Clientes *</label>
-                            <select multiple class="form-control" formControlName="Clientes">
-                                <option *ngFor="let cliente of _clientes" [ngValue]="cliente"> {{cliente.nome}} - {{cliente.cnpj}}</option>
-                            </select>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label>Clientes *</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar Cliente"  aria-label="Search" formControlName="filtro">
+                                </div>
+                                <div class="col-md-12 clientes">
+                                    <select multiple class="form-control" formControlName="Clientes">
+                                        <option *ngFor="let cliente of _clientes | filter:formulario.value.filtro;" [ngValue]="cliente"> {{cliente.nome}} - {{cliente.cnpj}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Produto</label>

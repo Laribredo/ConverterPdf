@@ -25,6 +25,7 @@ export class DocumentosComponent implements OnInit {
   htmlTabela:string = "";
   htmlDom:any;
   loading:boolean;
+  filtro:any;
 
 
   public formulario:FormGroup = new FormGroup({
@@ -43,7 +44,8 @@ export class DocumentosComponent implements OnInit {
     'obs': new FormControl(null),
     'corrida': new FormControl(null),
     'LiberadoCQ': new FormControl(null,Validators.required),
-    'ConferidoCQ': new FormControl(null,Validators.required)
+    'ConferidoCQ': new FormControl(null,Validators.required),
+    'filtro': new FormControl(null)
   })
 
   constructor(

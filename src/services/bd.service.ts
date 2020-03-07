@@ -3,6 +3,7 @@ import { Clientes } from "../models/clientes";
 import { Usuario } from "../models/usuario";
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { rejects } from 'assert';
 
 @Injectable()
 export class BD{
@@ -47,10 +48,9 @@ export class BD{
     cadastrarUsuario(_usuario: Usuario) : Promise<any>{
         return firebase.auth().createUserWithEmailAndPassword(_usuario.email, _usuario.senha)
         .then(res =>{
-            alert("Usuário Cadastrado");    
-            this.router.navigate(['/menu']);   
+            alert("Usuário Cadastrado");      
         }).catch(err =>{
-            return false;
+            alert("Ocorreu um erro ao cadastrar o empregado")
         })
     }
 
@@ -75,7 +75,7 @@ export class BD{
             .then(res =>{
                 res.forEach(cl =>{
                     
-                    _clientes.push(new Clientes(cl.val().nome, cl.val().cnpj, cl.val().endereco, cl.val().complemente, cl.val().cidade,
+                    _clientes.push(new Clientes(cl.key,cl.val().nome, cl.val().cnpj, cl.val().endereco, cl.val().complemente, cl.val().cidade,
                                                 cl.val().estado,cl.val().cep))
                 }) 
             });
@@ -84,4 +84,38 @@ export class BD{
 
         })
     }
+
+    updateClientes(_cliente: Clientes): Promise<any>{
+        return new Promise((resolve) =>{
+            firebase.database().ref("clientes/"+ _cliente.key)
+            .update(_cliente)
+            .then(res => {
+                alert("Cliente Editado com Sucesso.")              
+            }).catch(() =>{
+                alert("Ocorreu um Erro ao Editar o Cliente.")
+            })
+        })
+    }
+
+    deleteClientes(_cliente): Promise<any>{
+        return new Promise((resolve)=>{
+           let cli =  firebase.database().ref("clientes/"+ _cliente.key);
+           cli.remove().then(()=>{
+               alert("Cliente Removido com sucesso")
+           })
+            
+        })
+    }
+
+    gerarCertificado(_cliente: Clientes){
+        console.log("cadastro");
+        
+        firebase.database().ref("clientes").
+        push(_cliente)
+        .then(res =>{
+            alert("Usuário Cadastrado");    
+            this.router.navigate(['/menu']);          
+        })
+    }
+
 }
