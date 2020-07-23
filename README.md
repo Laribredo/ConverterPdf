@@ -1,6 +1,7 @@
 # PdfConverter
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.3.
+Obtenção de informações de um determinado padrão de PDF para a criação de um novo documento.
+<b>Angular 8<b>/<b>Firebase</b>
 
 ## Development server
 
