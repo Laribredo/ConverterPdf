@@ -41,8 +41,11 @@ export class DocumentosComponent implements OnInit {
     'liga': new FormControl(null),
     'durezaTracao': new FormControl(null),
     'analiseQuimica': new FormControl(null),
+    'analiseQuimicaIngles': new FormControl(null),
     'obs': new FormControl(null),
+    'obsIngles': new FormControl(null),
     'corrida': new FormControl(null),
+    'corridaIngles': new FormControl(null),
     'LiberadoCQ': new FormControl(null,Validators.required),
     'ConferidoCQ': new FormControl(null,Validators.required),
     'filtro': new FormControl(null)
@@ -81,11 +84,11 @@ export class DocumentosComponent implements OnInit {
     this.formulario.controls['durezaTracao'].setValue("");
     this.formulario.controls['analiseQuimica'].setValue("");
     this.formulario.controls['obs'].setValue("");
+    this.formulario.controls['obsIngles'].setValue("");
     this.formulario.controls['corrida'].setValue("");
     this.formulario.controls['LiberadoCQ'].setValue("");
     this.formulario.controls['ConferidoCQ'].setValue("");
   }
-
 
   async preencheValoresPdf(pdf:any)
   {
@@ -94,12 +97,20 @@ export class DocumentosComponent implements OnInit {
     let possiveisCampos:Array<String> = Array<String>(new String(["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
                            "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA","OBSERVAÇÃO"]));
                            
+    let possiveisCampos_ingles:Array<string> = ["TEST RESISTANCE LIMIT","INSPECTOR","THICKNESS","WIDTH","LENGTH","CONDUCTIVITY","STRETCHING","TOUGHNESS","PRODUCT CODE","T.G.","FLOW LIMIT","FOLDING TEST","DIAMETER",
+    "SIDE CURVATURE","ELECTRIC RESISTANCE","WEIGHT","LOT","RACING NUMBER","VISUAL","PURCHASE ORDER","NOTE"]
+
+    let Campos_ingles:Array<string> = ["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
+    "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA","OBSERVAÇÃO"]
+    
+
 
     let promise2 = await this.pdfConverter(pdf);
     this._items = promise2;
 
     setTimeout(() => {
-      document.getElementById("testeaa").innerHTML = "";
+      document.getElementById("node").innerHTML = "";
+      document.getElementById("node_ingles").innerHTML = "";
 
       this.formulario.controls['produto'].setValue(this._items[0].items[21].str);
       //this.formulario.controls['op'].setValue(this._items[0].items[23].str);
@@ -136,7 +147,13 @@ export class DocumentosComponent implements OnInit {
             let td2 = document.createElement('td');
             let td3 = document.createElement('td');
 
-            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && "ORDEM DE COMPRA" != this._items[0].items[i].str ){
+            let tr_ingles  = document.createElement('tr');
+            let td_ingles = document.createElement('td');
+            let td2_ingles = document.createElement('td');
+            let td3_ingles = document.createElement('td');
+
+            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && "ORDEM DE COMPRA" != this._items[0].items[i].str
+            && this._items[0].items[i].str != "OBSERVAÇÃO" ){
               td.colSpan = 3
               td.innerText = this._items[0].items[i].str
               td2.colSpan = 1 
@@ -146,68 +163,113 @@ export class DocumentosComponent implements OnInit {
               td3.colSpan = 2
               td3.style.borderRight = " 7px solid black";
 
-              //Verifica se o proximo campo é um dos campos 
-              if(possiveisCampos[0].indexOf(this._items[0].items[i+3].str) == -1)            
-                td3.innerText = "";  
-              else
-                td3.innerText = this._items[0].items[i+2].str;;
 
               this.htmlDom.append(td);
               this.htmlDom.append(td2);
+                //this._items[0].items[i].str);
+              
+              td_ingles.colSpan = 3
+              td_ingles.innerText = possiveisCampos_ingles[Campos_ingles.indexOf(this._items[0].items[i].str)]
+              td2_ingles.colSpan = 1 
+              td2_ingles.className = "font-weight-bold"
+              td_ingles.style.padding = "10px";
+              td2_ingles.innerText = this._items[0].items[i+1].str
+              td3_ingles.colSpan = 2
+              td3_ingles.style.borderRight = " 7px solid black";
+
+              tr_ingles.append(td_ingles);
+              tr_ingles.append(td2_ingles);
+             
+             //Verifica se o proximo campo é um dos campos 
+              if(possiveisCampos[0].indexOf(this._items[0].items[i+3].str) == -1 && 
+              this._items[0].items[i+3].str != "ANÁLISE QUÍMICA")    
+              {
+                td3.innerText = "";
+                td3_ingles.innerText = ""
+              }
+              else
+              if(this._items[0].items[i+2].str != "ANÁLISE QUÍMICA")
+              {
+                td3.innerText = this._items[0].items[i+2].str;
+                td3_ingles.innerText = this._items[0].items[i+2].str;
+              }
+                
+
+              tr_ingles.append(td3_ingles);
               this.htmlDom.append(td3);
 
-              document.querySelector("#testeaa").append(this.htmlDom)
+              document.querySelector("#node").append(this.htmlDom)
+              document.querySelector("#node_ingles").append(tr_ingles);
+
+              
+
             }
 
+          this.formulario.controls['obsIngles'].setValue('THIS PRODUCT IS IN COMPLIANCE WITH THE ROHS DIRECTIVE 2011/65 / EU');
           if( this._items[0].items[i].str =="ANÁLISE QUÍMICA" ){
             this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
+            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i+5].str));
             this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
           }
 
           if( this._items[0].items[i].str =="OBSERVACAO" && i < (this._items[0].items.length - 10)  ){
             this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
+            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i+5].str));
             this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
           }
         }
 
     }
-      console.log(this.htmlDom)
   
       this.loading = false;
     }, 2000);
-
+    
 
   }
 
-  teste(pdf:any)
+  analiseQuimicaIngles(an:string):string  {
+    if(an.indexOf("RESTANTE") != -1)
+    {
+      an = an.replace('RESTANTE','REMAINDER')
+    }
+    return an;
+  }
+
+  gerarCertificado(pdf:any,ingles:boolean)
   {
 
-    if( this.formulario.status == "VALID")
-    {
-      this.criarNovoPdf();
-      console.log(this.formulario.value.Clientes[0]);
+    // if( this.formulario.status == "VALID")
+    // {
+      this.criarNovoPdf(ingles)
 
       let _certificado = new Certificado(this.formulario.value.Clientes[0].nome,this.formulario.value.Clientes[0].cnpj,this.formulario.value.certificado,this.formulario.value.emissao);
-      this._bd.gerarCertificado(_certificado)
+      // this._bd.gerarCertificado(_certificado)
 
-      this._bd.setNCertificado(this.formulario.value.certificado+1).then(res =>{
-        console.log(res); 
-        this.formulario.controls['certificado'].setValue(this.formulario.value.certificado+1);     
-      });
+      // this._bd.setNCertificado(this.formulario.value.certificado+1).then(res =>{
+      //   console.log(res); 
+      //   this.formulario.controls['certificado'].setValue(this.formulario.value.certificado+1);     
+      // });
 
-    }else
-      alert("Preencha os campos necessários")
+    // }else
+    //   alert("Preencha os campos necessários")
     // this.pdfConverter(pdf).then(res =>{
     //   console.log(res);      
     // })
   }
 
-  criarNovoPdf(){
+  criarNovoPdf(ingles:boolean){
 
     let myWindow;
     myWindow=window.open('','','width=1000,height=900');
     myWindow.document.write('<html><head><style>tr td { border: 1px solid black; color: black;}</style><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
-    myWindow.document.write(document.querySelector("#tabela").innerHTML);
+    if(!ingles)
+    {
+      myWindow.document.write(document.querySelector("#tabela").innerHTML);
+    }else
+    {
+      myWindow.document.write(document.querySelector("#tabela_ingles").innerHTML);
+    }
+      
     myWindow.document.write("</body></html>")
 
 

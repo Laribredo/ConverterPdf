@@ -93,8 +93,9 @@
                     <hr>
                 </form>
                 <div class="row">
-                    <div class="col-md-7 offset-md-7">
-                        <button class="btn btn-primary" (click)="teste(pdf)"> Gerar Certificado </button>
+                    <div class="col-md-7 offset-md-4">
+                        <button class="btn btn-primary" (click)="gerarCertificado(pdf,false)"> Gerar Certificado </button>
+                        <button class="btn btn-primary" style="margin-left: 10px;" (click)="gerarCertificado(pdf,true)"> Gerar Certificado Em inglês</button>
                     </div>
                 </div>
             </div>
@@ -167,7 +168,7 @@
                     <td colspan="1" class="font-weight-bold">Medidas Encontradas</td>
                     <td colspan="2" class="font-weight-bold" style=" border-right: 7px solid black;">Observações</td>
                 </tr>
-                <span id="testeaa"></span>
+                <span id="node"></span>
                 <tr>
                     <td colspan="3" style="padding: 10px;">
                         ORDEM DE COMPRA
@@ -205,148 +206,109 @@
     </div>
 </div>
 
-
-
-
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <form [formGroup]="formulario">
-                <h3>Selecione o arquivo PDF para conversao</h3>
-                <input #pdf type="file" formControlName="pdf">
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">Emissao</label>
-                    <input type="text" class="form-control" formControlName="emissao">
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlSelect2">Clientes</label>
-                    <select multiple class="form-control" id="exampleFormControlSelect2" formControlName="Clientes">
-                        <option *ngFor="let cliente of _clientes" [ngValue]="cliente"> {{cliente.nome}} - {{cliente.cnpj}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">Nota Fiscal</label>
-                    <input type="text" class="form-control" formControlName="notaFiscal">
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">O.P</label>
-                    <input type="text" class="form-control" formControlName="op">
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">Liberado C.Q</label>
-                    <input type="text" class="form-control" formControlName="LiberadoCQ">
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">Conferido C.Q</label>
-                    <input type="text" class="form-control" formControlName="ConferidoCQ">
-                </div>
-                <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="teste(pdf)"> Gerar Preview </button>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel">
+    <!-- <div> -->
     <div class="modal-dialog modal-xl">
-        <div id="tabela" class="modal-content">
-            <table class="table table-bordered text-center">
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold">CYPRIUM</td>
-                        <td class="font-weight-bold">
-                            CERTIFICADO GARANTIA DA QUALIDADE</td>
-                        <td class="font-weight-bold">N Certificado</td>
-                    </tr>
-                    <tr>
-                        <td>Emissao</td>
-                        <td colspan="3" class="text-left" id="emissao">Thornton</td>
-                    </tr>
-                    <tr>
-                        <td>Cliente</td>
-                        <td colspan="3" class="text-left" id="cliente">Fulano de Tal</td>
-                    </tr>
-                    <tr>
-                        <td>CNPJ</td>
-                        <td colspan="3" class="text-left" id="cnpj">999999999/99999</td>
-                    </tr>
-                    <tr>
-                        <td>Produto</td>
-                        <td colspan="3" class="text-left" id="produto">aaaaaaaaa</td>
-                    </tr>
-                    <tr>
-                        <td colspan="9">
-                            <table>
-                                <tr>
-                                    <td>Nota Fiscal</td>
-                                    <td>9999999999</td>
-                                    <td>Desenho</td>
-                                    <td id="desenho">9999999</td>
-                                    <td>O.P</td>
-                                    <td>9999999999</td>
-                                </tr>
-                                <tr>
-                                    <td>Liga</td>
-                                    <td id="liga">CCCCCCCCC</td>
-                                    <td colspan="2">Dureza / Tracao</td>
-                                    <td colspan="2" id="durezaTracao">000000000</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Denominacao</td>
-                                    <td colspan="2">Medidas Encontradas</td>
-                                    <td colspan="2">Observacao</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Espessura</td>
-                                    <td id="espessuraMedidas" colspan="2">121516</td>
-                                    <td id="espessuraObs" colspan="2">xxxxxxxxxxxx</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Largura</td>
-                                    <td colspan="2" id="larguraMedidas">121516</td>
-                                    <td colspan="2" id="larguraObs">xxxxxxxxxxxx</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Dureza</td>
-                                    <td colspan="2" id="durezaMedidas">121516</td>
-                                    <td colspan="2" id="durezaObs">xxxxxxxxxxxx</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Teste de Dobra</td>
-                                    <td colspan="2" id="testeDeDobraMedidas">121516</td>
-                                    <td colspan="2" id="testeDeDobraObs">xxxxxxxxxxxx</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Peso</td>
-                                    <td colspan="2" id="pesoMedidas">121516</td>
-                                    <td colspan="2" id="pesoObs">xxxxxxxxxxxx</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">Ordem de Compra</td>
-                                    <td colspan="2" id="ordemDeCompra">121516</td>
-                                    <td colspan="2" id="ordemDeCompraObs">xxxxxxxxxxxx</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="1">Analise Quimica</td>
-                                    <td colspan="5" class="text-left" id="analiseQuimica">CU=67,5% FE=0,002% ZN=RESTANTE.</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="1">Observacao</td>
-                                    <td colspan="5" class="text-left" id="observacao">ESTE PROD ESTA EM PLENA CONFORMIDADE COM A DIRECTIVA ROHS 2011/65/UE</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="1">Corrida n</td>
-                                    <td colspan="5" class="text-left" id="corrida">9999999999/99</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="1">Liberado C.Q</td>
-                                    <td colspan="2" class="text-left" id="LiberadoCQ">TTTTTTTT</td>
-                                    <td colspan="1">Conferido C.Q</td>
-                                    <td colspan="2" class="text-left" id="ConferidoCQ">TTTTTTTTtttt</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
+        <div id="tabela_ingles" class="modal-content">
+            <table border="1" class="text-center" style="font-weight: 700; border: 7px solid black;">
+                <tr>
+                    <td colspan="1" style="line-height: 1.1;padding: 15px 40px; border-right-color:transparent; ">
+                        <span class="font-weight-bold" style="font-size: 30px;">
+                            <img src="./../../assets/logo-final-06.png" alt="" srcset="" width="113" style="margin-bottom: 6px;">
+                        </span>
+                        <span style="font-size: 10px; font-weight: 1px;">
+                            <BR>CNPJ 11.275.029/0001-00
+                        </span>
+                    </td>
+                    <td colspan="4" class="font-weight-bold" style="font-size: 25px;padding: 1px 84px; border-right: transparent;">
+                        QUALITY GUARANTEE
+                    </td>
+                    <td colspan="1" class="font-weight-bold" style="padding: 15px 40px; border-right: 7px solid black; border-left-color: transparent; font-size: 25px; ">
+                        CERTIFICATE Nº <br><span>{{formulario.value.certificado}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Emission</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.emissao}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Client</td>
+                    <td colspan="5" class="text-left" id="cliente" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;  border-right: 7px solid black;">
+                        {{formulario.value.Clientes[0].nome}}
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <td class="font-weight-bold">CNPJ</td>
+                    <td colspan="5" class="text-left" id="cnpj" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;  border-right: 7px solid black;">
+                        {{formulario.value.Clientes[0].cnpj}}
+                    </td>
+                </tr> -->
+                <tr>
+                    <td colspan="8" style="height: 5vh;"></td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Product</td>
+                    <td colspan="5" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.produto}}</td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="font-weight-bold" style="padding: 10px;">Invoice</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.notaFiscal}}</td>
+                    <td colspan="1" class="font-weight-bold">Drawing</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;"></td>
+                    <td colspan="1" class="font-weight-bold">O.P</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.op}}</td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="font-weight-bold">Alloy</td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.liga}}</td>
+                    <td colspan="1" class="font-weight-bold">Hardness/Traction</td>
+                    <td colspan="3" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.durezaTracao}}</td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="height: 5vh;"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="font-weight-bold" style="padding: 10px;">Denomination</td>
+                    <td colspan="1" class="font-weight-bold">Measures Found</td>
+                    <td colspan="2" class="font-weight-bold" style=" border-right: 7px solid black;">Comments</td>
+                </tr>
+                <span id="node_ingles"></span>
+                <tr>
+                    <td colspan="3" style="padding: 10px;">
+                        PURCHASE ORDER
+                    </td>
+                    <td colspan="1" class="font-weight-bold">
+                        {{formulario.value.ordemCompra}}
+                    </td>
+                    <td colspan="2" style=" border-right: 7px solid black;">
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="height: 5vh;"></td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Chemical Analysis</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.analiseQuimicaIngles}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Note</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.obsIngles}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="padding: 10px;">Race N°</td>
+                    <td colspan="5" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.corridaIngles}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="padding: 10px;">Release C.Q</td>
+                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;">{{formulario.value.LiberadoCQ}}</td>
+                    <td class="font-weight-bold">Confered C.Q</td>
+                    <td colspan="2" class="text-left" id="emissao" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.ConferidoCQ}}</td>
+                </tr>
             </table>
         </div>
     </div>
-</div> -->
+</div>
+
+
+
