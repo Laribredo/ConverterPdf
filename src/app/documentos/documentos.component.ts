@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import {Documentos} from '../../models/documentos'
+import { Documentos } from '../../models/documentos'
 import * as PDFJS from 'pdfjs-dist/build/pdf';
-import html2canvas from 'html2canvas'; 
+import html2canvas from 'html2canvas';
 import { Lexer } from '@angular/compiler';
-import {BD} from '../../services/bd.service'
+import { BD } from '../../services/bd.service'
 import { Clientes } from "../../models/clientes";
 import { DomSanitizer } from '@angular/platform-browser';
-import {Certificado} from "../../models/certificados";
-declare const jsPDF:any
+import { Certificado } from "../../models/certificados";
+declare const jsPDF: any
 
 PDFJS.GlobalWorkerOptions.workerSrc = './assets/js/pdf.worker.min.js';
 
@@ -19,24 +19,24 @@ PDFJS.GlobalWorkerOptions.workerSrc = './assets/js/pdf.worker.min.js';
 })
 export class DocumentosComponent implements OnInit {
 
-  _documento : Documentos;
-  _oldPDF : any;
+  _documento: Documentos;
+  _oldPDF: any;
   public _clientes: Array<Clientes>
   _items: any = [];
-  htmlTabela:string = "";
-  htmlDom:any;
-  loading:boolean;
-  filtro:any;
+  htmlTabela: string = "";
+  htmlDom: any;
+  loading: boolean;
+  filtro: any;
 
-  public formulario:FormGroup = new FormGroup({
-    'pdf': new FormControl(null,Validators.required),    
-    'emissao': new FormControl(null,Validators.required),
+  public formulario: FormGroup = new FormGroup({
+    'pdf': new FormControl(null, Validators.required),
+    'emissao': new FormControl(null, Validators.required),
     'certificado': new FormControl(null),
-    'notaFiscal': new FormControl(null,Validators.required),
-    'Clientes': new FormControl(null,Validators.required),
+    'notaFiscal': new FormControl(null, Validators.required),
+    'Clientes': new FormControl(null, Validators.required),
     'produto': new FormControl(null),
     'desenho': new FormControl(null),
-    'op': new FormControl(null,Validators.required),
+    'op': new FormControl(null, Validators.required),
     'ordemCompra': new FormControl(null),
     'liga': new FormControl(null),
     'durezaTracao': new FormControl(null),
@@ -46,34 +46,34 @@ export class DocumentosComponent implements OnInit {
     'obsIngles': new FormControl(null),
     'corrida': new FormControl(null),
     'corridaIngles': new FormControl(null),
-    'LiberadoCQ': new FormControl(null,Validators.required),
-    'ConferidoCQ': new FormControl(null,Validators.required),
+    'LiberadoCQ': new FormControl(null, Validators.required),
+    'ConferidoCQ': new FormControl(null, Validators.required),
     'filtro': new FormControl(null)
   })
 
   constructor(
-   private _bd : BD,
-   private sanitizer: DomSanitizer
+    private _bd: BD,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.loading = false;
-    this.preencheCamposForm();    
+    this.preencheCamposForm();
   }
 
 
-  preencheCamposForm(){
+  preencheCamposForm() {
     let data = new Date();
-    this.formulario.controls['emissao'].setValue((data.getDate() < 10 ? "0" + (data.getDate()+1) : data.getDate()) + "/" +( (data.getMonth()+1) < 10 ? "0" + (data.getMonth()+1) : data.getMonth() ) + "/" + data.getFullYear())
-     this._bd.getClientes().then(res =>{
-      this._clientes = res       
+    this.formulario.controls['emissao'].setValue((data.getDate() < 10 ? "0" + (data.getDate()) : data.getDate()) + "/" + ((data.getMonth() + 1) < 10 ? "0" + (data.getMonth() + 1) : data.getMonth()) + "/" + data.getFullYear())
+    this._bd.getClientes().then(res => {
+      this._clientes = res
     });
-    this._bd.getNCertificado().then(res =>{
-      this.formulario.controls['certificado'].setValue(res);      
+    this._bd.getNCertificado().then(res => {
+      this.formulario.controls['certificado'].setValue(res);
     })
   }
 
-  clearForm(){
+  clearForm() {
     this.formulario.controls['corrida'].setValue("");
     this.formulario.controls['notaFiscal'].setValue("");
     this.formulario.controls['produto'].setValue("");
@@ -90,19 +90,18 @@ export class DocumentosComponent implements OnInit {
     this.formulario.controls['ConferidoCQ'].setValue("");
   }
 
-  async preencheValoresPdf(pdf:any)
-  {
+  async preencheValoresPdf(pdf: any) {
     this.clearForm();
     this.loading = true;
-    let possiveisCampos:Array<String> = Array<String>(new String(["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
-                           "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA","OBSERVAÇÃO"]));
-                           
-    let possiveisCampos_ingles:Array<string> = ["TEST RESISTANCE LIMIT","INSPECTOR","THICKNESS","WIDTH","LENGTH","CONDUCTIVITY","STRETCHING","TOUGHNESS","PRODUCT CODE","T.G.","FLOW LIMIT","FOLDING TEST","DIAMETER",
-    "SIDE CURVATURE","ELECTRIC RESISTANCE","WEIGHT","LOT","RACING NUMBER","VISUAL","PURCHASE ORDER","NOTE"]
+    let possiveisCampos: Array<String> = Array<String>(new String(["LIMITE DE RESISTÊNCIA A TRAÇÃO", "INSPETOR", "ESPESSURA", "LARGURA", "COMPRIMENTO", "CONDUTIVIDADE", "ALONGAMENTO", "DUREZA", "CÓDIGO DO PRODUTO", "T.G.", "LIMITE DE ESCOAMENTO", "TESTE DE DOBRA", "DIÂMETRO",
+      "CURVATURA LATERAL", "RESISTIVIDADE ELETRICA", "PESO", "LOTE", "N° DE CORRIDA", "VISUAL", "ORDEM DE COMPRA", "OBSERVAÇÃO"]));
 
-    let Campos_ingles:Array<string> = ["LIMITE DE RESISTÊNCIA A TRAÇÃO","INSPETOR","ESPESSURA","LARGURA","COMPRIMENTO","CONDUTIVIDADE","ALONGAMENTO","DUREZA","CÓDIGO DO PRODUTO","T.G.","LIMITE DE ESCOAMENTO","TESTE DE DOBRA","DIÂMETRO",
-    "CURVATURA LATERAL","RESISTIVIDADE ELETRICA","PESO","LOTE","N° DE CORRIDA","VISUAL","ORDEM DE COMPRA","OBSERVAÇÃO"]
-    
+    let possiveisCampos_ingles: Array<string> = ["DRAIN RESISTANCE LIMIT", "INSPECTOR", "THICKNESS", "WIDTH", "LENGTH", "CONDUCTIVITY", "STRETCHING", "TOUGHNESS", "PRODUCT CODE", "T.G.", "FLOW LIMIT", "TEST OF DOUBLE", "DIAMETER",
+      "SIDE CURVATURE", "ELECTRIC RESISTANCE", "WEIGHT", "LOT", "RACING NUMBER", "VISUAL", "PURCHASE ORDER", "NOTE"]
+
+    let Campos_ingles: Array<string> = ["LIMITE DE RESISTÊNCIA A TRAÇÃO", "INSPETOR", "ESPESSURA", "LARGURA", "COMPRIMENTO", "CONDUTIVIDADE", "ALONGAMENTO", "DUREZA", "CÓDIGO DO PRODUTO", "T.G.", "LIMITE DE ESCOAMENTO", "TESTE DE DOBRA", "DIÂMETRO",
+      "CURVATURA LATERAL", "RESISTIVIDADE ELETRICA", "PESO", "LOTE", "N° DE CORRIDA", "VISUAL", "ORDEM DE COMPRA", "OBSERVAÇÃO"]
+
 
 
     let promise2 = await this.pdfConverter(pdf);
@@ -116,160 +115,165 @@ export class DocumentosComponent implements OnInit {
       //this.formulario.controls['op'].setValue(this._items[0].items[23].str);
       this.formulario.controls['liga'].setValue(this._items[0].items[24].str);
 
-      if(possiveisCampos[0].indexOf(this._items[0].items[25].str) == -1)
+      if (possiveisCampos[0].indexOf(this._items[0].items[25].str) == -1)
         this.formulario.controls['durezaTracao'].setValue(this._items[0].items[25].str)
 
-      let teste:string 
-      
-      console.log(this._items[0].items[this._items[0].items.length-3].str);
-      
-      if(this._items.length > 1)
-      {
+      let teste: string
 
-      }else
-      {
-        if(this._items[0].items[this._items[0].items.length-3].str.search("ESTA EM PLENA CONFORMIDADE") === -1)
-        {
-          this.formulario.controls['corrida'].setValue(this._items[0].items[this._items[0].items.length-3].str)
+      console.log(this._items[0].items[this._items[0].items.length - 3].str);
+
+      if (this._items.length > 1) {
+
+      } else {
+        if (this._items[0].items[this._items[0].items.length - 3].str.search("ESTA EM PLENA CONFORMIDADE") === -1) {
+          this.formulario.controls['corrida'].setValue(this._items[0].items[this._items[0].items.length - 3].str)
         }
 
 
         console.log(this._items);
-          
-        for(let i = 0; i < this._items[0].items.length; i++)
-        {
+
+        for (let i = 0; i < this._items[0].items.length; i++) {
           document.hasChildNodes
           //console.log(this._items[0].items[i].str);
 
 
-            this.htmlDom  = document.createElement('tr');
-            let td = document.createElement('td');
-            let td2 = document.createElement('td');
-            let td3 = document.createElement('td');
+          this.htmlDom = document.createElement('tr');
+          let td = document.createElement('td');
+          let td2 = document.createElement('td');
+          let td3 = document.createElement('td');
 
-            let tr_ingles  = document.createElement('tr');
-            let td_ingles = document.createElement('td');
-            let td2_ingles = document.createElement('td');
-            let td3_ingles = document.createElement('td');
+          let tr_ingles = document.createElement('tr');
+          let td_ingles = document.createElement('td');
+          let td2_ingles = document.createElement('td');
+          let td3_ingles = document.createElement('td');
 
-            if(possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13 && "ORDEM DE COMPRA" != this._items[0].items[i].str
-            && this._items[0].items[i].str != "OBSERVAÇÃO" ){
-              td.colSpan = 3
-              td.innerText = this._items[0].items[i].str
-              td2.colSpan = 1 
-              td2.className = "font-weight-bold"
-              td.style.padding = "10px";
-              td2.innerText = this._items[0].items[i+1].str
-              td3.colSpan = 2
-              td3.style.borderRight = " 7px solid black";
+          if (this._items[0].items[i].str != " "
+            && possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13
+            && "ORDEM DE COMPRA" != this._items[0].items[i].str
+            && this._items[0].items[i].str != "OBSERVAÇÃO") {
+
+            td.colSpan = 3
+            td.innerText = this._items[0].items[i].str
+            td2.colSpan = 1
+            td2.className = "font-weight-bold"
+            td.style.padding = "10px";
+            td2.innerText = this._items[0].items[i + 1].str
+            td3.colSpan = 2
+            td3.style.borderRight = " 7px solid black";
 
 
-              this.htmlDom.append(td);
-              this.htmlDom.append(td2);
-                //this._items[0].items[i].str);
-              
-              td_ingles.colSpan = 3
-              td_ingles.innerText = possiveisCampos_ingles[Campos_ingles.indexOf(this._items[0].items[i].str)]
-              td2_ingles.colSpan = 1 
-              td2_ingles.className = "font-weight-bold"
-              td_ingles.style.padding = "10px";
-              td2_ingles.innerText = this._items[0].items[i+1].str
-              td3_ingles.colSpan = 2
-              td3_ingles.style.borderRight = " 7px solid black";
+            this.htmlDom.append(td);
+            this.htmlDom.append(td2);
+            //this._items[0].items[i].str);
 
-              tr_ingles.append(td_ingles);
-              tr_ingles.append(td2_ingles);
-             
-             //Verifica se o proximo campo é um dos campos 
-              if(possiveisCampos[0].indexOf(this._items[0].items[i+3].str) == -1 && 
-              this._items[0].items[i+3].str != "ANÁLISE QUÍMICA")    
-              {
+            td_ingles.colSpan = 3
+            td_ingles.innerText = possiveisCampos_ingles[Campos_ingles.indexOf(this._items[0].items[i].str)]
+            td2_ingles.colSpan = 1
+            td2_ingles.className = "font-weight-bold"
+            td_ingles.style.padding = "10px";
+            td2_ingles.innerText = this._items[0].items[i + 1].str
+            td3_ingles.colSpan = 2
+            td3_ingles.style.borderRight = " 7px solid black";
+
+            tr_ingles.append(td_ingles);
+            tr_ingles.append(td2_ingles);
+
+            //Verifica se o proximo campo é um dos campos 
+            if (this._items[0].items[i + 3] !== undefined) {
+              if (possiveisCampos[0].indexOf(this._items[0].items[i + 3].str) == -1 &&
+                this._items[0].items[i + 3].str != "ANÁLISE QUÍMICA") {
                 td3.innerText = "";
                 td3_ingles.innerText = ""
               }
               else
-              if(this._items[0].items[i+2].str != "ANÁLISE QUÍMICA")
-              {
-                td3.innerText = this._items[0].items[i+2].str;
-                td3_ingles.innerText = this._items[0].items[i+2].str;
-              }
-                
-
-              tr_ingles.append(td3_ingles);
-              this.htmlDom.append(td3);
-
-              document.querySelector("#node").append(this.htmlDom)
-              document.querySelector("#node_ingles").append(tr_ingles);
-
-              
+                if (this._items[0].items[i + 2].str != "ANÁLISE QUÍMICA") {
+                  td3.innerText = this._items[0].items[i + 2].str;
+                  td3_ingles.innerText = this._items[0].items[i + 2].str;
+                }
 
             }
 
-          this.formulario.controls['obsIngles'].setValue('THIS PRODUCT IS IN COMPLIANCE WITH THE ROHS DIRECTIVE 2011/65 / EU');
-          if( this._items[0].items[i].str =="ANÁLISE QUÍMICA" ){
-            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
-            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i+5].str));
-            this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
+
+            tr_ingles.append(td3_ingles);
+            this.htmlDom.append(td3);
+
+            document.querySelector("#node").append(this.htmlDom)
+            document.querySelector("#node_ingles").append(tr_ingles);
+
+
+
           }
 
-          if( this._items[0].items[i].str =="OBSERVACAO" && i < (this._items[0].items.length - 10)  ){
-            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i+5].str);
-            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i+5].str));
-            this.formulario.controls['obs'].setValue(this._items[0].items[i+6].str);
+          this.formulario.controls['obsIngles'].setValue('THIS PRODUCT IS IN COMPLIANCE WITH THE ROHS DIRECTIVE 2011/65 / EU');
+          this.formulario.controls['corridaIngles'].setValue(this.corridaIngles(this.formulario.value.corrida))
+
+          if (this._items[0].items[i].str == "ANÁLISE QUÍMICA") {
+            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i + 5].str);
+            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i + 5].str));
+            this.formulario.controls['obs'].setValue(this._items[0].items[i + 6].str);
+          }
+
+          if (this._items[0].items[i].str == "OBSERVACAO" && i < (this._items[0].items.length - 10)) {
+            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i + 5].str);
+            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i + 5].str));
+            this.formulario.controls['obs'].setValue(this._items[0].items[i + 6].str);
           }
         }
 
-    }
-  
+      }
+
       this.loading = false;
     }, 2000);
-    
+
 
   }
 
-  analiseQuimicaIngles(an:string):string  {
-    if(an.indexOf("RESTANTE") != -1)
-    {
-      an = an.replace('RESTANTE','REMAINDER')
+  corridaIngles(a: string) {
+    if (a.indexOf('CONFORME') !== -1) {
+      let indice: number = a.indexOf('CONFORME');
+      a = a.replace('CONFORME', 'ACCORDING TO')
+    }
+    return a;
+  }
+
+  analiseQuimicaIngles(an: string): string {
+    if (an.indexOf("RESTANTE") != -1) {
+      an = an.replace('RESTANTE', 'REMAINDER')
     }
     return an;
   }
 
-  gerarCertificado(pdf:any,ingles:boolean)
-  {
+  gerarCertificado(pdf: any, ingles: boolean) {
 
-    // if( this.formulario.status == "VALID")
-    // {
+    if (this.formulario.status == "VALID") {
       this.criarNovoPdf(ingles)
 
-      let _certificado = new Certificado(this.formulario.value.Clientes[0].nome,this.formulario.value.Clientes[0].cnpj,this.formulario.value.certificado,this.formulario.value.emissao);
-      // this._bd.gerarCertificado(_certificado)
+      let _certificado = new Certificado(this.formulario.value.Clientes[0].nome, this.formulario.value.Clientes[0].cnpj, this.formulario.value.certificado, this.formulario.value.emissao);
+      this._bd.gerarCertificado(_certificado)
 
-      // this._bd.setNCertificado(this.formulario.value.certificado+1).then(res =>{
-      //   console.log(res); 
-      //   this.formulario.controls['certificado'].setValue(this.formulario.value.certificado+1);     
-      // });
+      this._bd.setNCertificado(this.formulario.value.certificado + 1).then(res => {
+        console.log(res);
+        this.formulario.controls['certificado'].setValue(this.formulario.value.certificado + 1);
+      });
 
-    // }else
-    //   alert("Preencha os campos necessários")
-    // this.pdfConverter(pdf).then(res =>{
-    //   console.log(res);      
-    // })
+    } else
+      alert("Preencha os campos necessários")
+    this.pdfConverter(pdf).then(res => {
+      console.log(res);
+    })
   }
 
-  criarNovoPdf(ingles:boolean){
+  criarNovoPdf(ingles: boolean) {
 
     let myWindow;
-    myWindow=window.open('','','width=1000,height=900');
+    myWindow = window.open('', '', 'width=1000,height=900');
     myWindow.document.write('<html><head><style>tr td { border: 1px solid black; color: black;}</style><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  </style></head><body>')
-    if(!ingles)
-    {
+    if (!ingles) {
       myWindow.document.write(document.querySelector("#tabela").innerHTML);
-    }else
-    {
+    } else {
       myWindow.document.write(document.querySelector("#tabela_ingles").innerHTML);
     }
-      
+
     myWindow.document.write("</body></html>")
 
 
@@ -278,42 +282,42 @@ export class DocumentosComponent implements OnInit {
     setTimeout(() => {
       myWindow.print()
     }, 2000);
-  
+
   }
-  
-   pdfConverter(pdfA:any): Promise<any>{
+
+  pdfConverter(pdfA: any): Promise<any> {
     var file = pdfA.files[0];
 
     //Step 2: Read the file using file reader
-    var fileReader = new FileReader(); 
-    var typedarray : any; 
+    var fileReader = new FileReader();
+    var typedarray: any;
 
-    return new Promise(resolve =>{
+    return new Promise(resolve => {
 
       let items: Array<any> = []
 
-      fileReader.onload = function() {
+      fileReader.onload = function () {
         //Step 4:turn array buffer into typed array
         typedarray = new Uint8Array(this.result as ArrayBuffer);
-        
-          var pdfA = PDFJS.getDocument(typedarray).promise
-          return pdfA.then(function(pdf) { // get all pages text
-            var texts;
-            var maxPages = pdf.numPages;
-            var countPromises = []; // collecting all page promises
-            for (var j = 1; j <= maxPages; j++) {
-              var page = pdf.getPage(j);
-    
-              var txt = "";
-              countPromises.push(page.then(function(page) { // add page promise
-                var textContent = page.getTextContent();
-                return textContent.then(function(text){
-                  items.push(text);
-                });
-              }));
-            }
-          });
-        }
+
+        var pdfA = PDFJS.getDocument(typedarray).promise
+        return pdfA.then(function (pdf) { // get all pages text
+          var texts;
+          var maxPages = pdf.numPages;
+          var countPromises = []; // collecting all page promises
+          for (var j = 1; j <= maxPages; j++) {
+            var page = pdf.getPage(j);
+
+            var txt = "";
+            countPromises.push(page.then(function (page) { // add page promise
+              var textContent = page.getTextContent();
+              return textContent.then(function (text) {
+                items.push(text);
+              });
+            }));
+          }
+        });
+      }
 
       resolve(items);
 

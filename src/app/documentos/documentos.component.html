@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label>Nota Fiscal *</label>
-                            <input type="text" class="form-control" formControlName="notaFiscal">
+                            <input type="text" class="form-control" formControlName="notaFiscal" (keyup)="this.formulario.controls['op'].setValue(this.formulario.value.notaFiscal)">
                         </div>
                         <div class="col-md-9 mb-3">
                             <div class="row">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-md-9 mb-3">
                             <label>O.P *</label>
-                            <input type="text" class="form-control" formControlName="op" value="{{formulario.value.notaFiscal}}">
+                            <input type="text" class="form-control" formControlName="op">
                         </div>
                         <div class="col-md-9 mb-3">
                             <label>Ordem de Compra *</label>
@@ -150,7 +150,7 @@
                     <td colspan="1" class="font-weight-bold" style="padding: 10px;">Nota Fiscal</td>
                     <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.notaFiscal}}</td>
                     <td colspan="1" class="font-weight-bold">Desenho</td>
-                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;"></td>
+                    <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;">{{formulario.value.desenho}}</td>
                     <td colspan="1" class="font-weight-bold">O.P</td>
                     <td colspan="1" class="text-left" id="cnpj" style="padding: 10px;  border-right: 7px solid black;">{{formulario.value.op}}</td>
                 </tr>
@@ -237,12 +237,12 @@
                         {{formulario.value.Clientes[0].nome}}
                     </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                     <td class="font-weight-bold">CNPJ</td>
                     <td colspan="5" class="text-left" id="cnpj" *ngIf="formulario.value.Clientes !== null" style="padding: 10px;  border-right: 7px solid black;">
                         {{formulario.value.Clientes[0].cnpj}}
                     </td>
-                </tr> -->
+                </tr>
                 <tr>
                     <td colspan="8" style="height: 5vh;"></td>
                 </tr>
