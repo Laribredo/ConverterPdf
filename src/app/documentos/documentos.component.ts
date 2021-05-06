@@ -102,7 +102,9 @@ export class DocumentosComponent implements OnInit {
     let Campos_ingles: Array<string> = ["LIMITE DE RESISTÊNCIA A TRAÇÃO", "INSPETOR", "ESPESSURA", "LARGURA", "COMPRIMENTO", "CONDUTIVIDADE", "ALONGAMENTO", "DUREZA", "CÓDIGO DO PRODUTO", "T.G.", "LIMITE DE ESCOAMENTO", "TESTE DE DOBRA", "DIÂMETRO",
       "CURVATURA LATERAL", "RESISTIVIDADE ELETRICA", "PESO", "LOTE", "N° DE CORRIDA", "VISUAL", "ORDEM DE COMPRA", "OBSERVAÇÃO"]
 
-
+    let campos_principais = ["METÁLLICA", "INDUSTRIAL S/A", "C E R T I F I C A D O", "GARANTIA DA QUALIDADE", "QUALIDADE",
+      "ASSEGURADA", "EMISSÃO", "DENOMINAÇÃO", "MEDIDAS ENCONTRADAS", "Nº CERTIFICADO:", "CLIENTE", "PRODUTO", "NOTA", "FISCAL", "NOTA FISCAL", "OTA FISCAL", "D E S E N H O", "O.P.", "LIGA", "DUREZA / TRAÇÃO", "LIMITE DE RESISTÊNCIA A TRAÇÃO", "INSPETOR", "ESPESSURA", "LARGURA", "COMPRIMENTO", "CONDUTIVIDADE", "ALONGAMENTO", "DUREZA", "CÓDIGO DO PRODUTO", "T.G.", "LIMITE DE ESCOAMENTO", "TESTE DE DOBRA", "DIÂMETRO",
+      "CURVATURA LATERAL", "RESISTIVIDADE ELETRICA", "CONDUTIVIDADE", "PESO", "LOTE", "N° DE CORRIDA", "VISUAL", "ANÁLISE QUÍMICA", "ORDEM DE COMPRA", "OBSERVAÇÃO", "CORRIDA", "CONDUTIVIDAD", "LIBERADO C.Q.", "CONFERIDO C.Q"]
 
     let promise2 = await this.pdfConverter(pdf);
     this._items = promise2;
@@ -129,97 +131,255 @@ export class DocumentosComponent implements OnInit {
           this.formulario.controls['corrida'].setValue(this._items[0].items[this._items[0].items.length - 3].str)
         }
 
+        //REGRA IMPLANTADA PARA OS PDFS QUE VEM COM ESPAÇAMENTO
+        let novo_item = []
+        let campo = ""
+        this._items[0].items.map((t, i) => {
+          if (t.str.trim() != "" && campos_principais.indexOf(t.str.trim()) == -1) {
+            campo += t.str;
+          }
 
-        console.log(this._items);
+          if (t.str.trim() != "" && campos_principais.indexOf(t.str.trim()) != -1) {
 
-        for (let i = 0; i < this._items[0].items.length; i++) {
-          document.hasChildNodes
-          //console.log(this._items[0].items[i].str);
+            if (campo != "")
+              novo_item.push(campo);
+
+            novo_item.push(t.str.trim());
+
+            campo = "";
+          }
+        })
+        console.log("novo");
+        console.log(novo_item);
 
 
-          this.htmlDom = document.createElement('tr');
-          let td = document.createElement('td');
-          let td2 = document.createElement('td');
-          let td3 = document.createElement('td');
+        console.log("antigo");
+        console.log(this._items[0].items);
 
-          let tr_ingles = document.createElement('tr');
-          let td_ingles = document.createElement('td');
-          let td2_ingles = document.createElement('td');
-          let td3_ingles = document.createElement('td');
 
-          if (this._items[0].items[i].str != " "
-            && possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13
-            && "ORDEM DE COMPRA" != this._items[0].items[i].str
-            && this._items[0].items[i].str != "OBSERVAÇÃO") {
+        if (this._items[0].items.length > 100) {
+          novo_item.map((it, i) => {
+            if (it == "PRODUTO") {
+              this.formulario.controls['produto'].setValue(novo_item[i + 1]);
+            }
+            if (it == "LIGA") {
+              this.formulario.controls['liga'].setValue(novo_item[i + 1]);
+            }
+            if (it == "CORRIDA") {
+              this.formulario.controls['corrida'].setValue(novo_item[i + 1]);
+            }
+            if (it == "OBSERVAÇÃO") {
+              this.formulario.controls['obs'].setValue(novo_item[i + 1]);
+            }
+            if(it == "ANÁLISE QUÍMICA")
+            {
+              this.formulario.controls['analiseQuimica'].setValue(novo_item[i + 1]);
+              this.formulario.controls['analiseQuimicaIngles'].setValue(novo_item[i + 1]);
+            }
+          })
+        }
+
+        this.formulario.controls['obsIngles'].setValue('THIS PRODUCT IS IN COMPLIANCE WITH THE ROHS DIRECTIVE 2011/65 / EU');
+        this.formulario.controls['corridaIngles'].setValue(this.corridaIngles(this.formulario.value.corrida))
+
+        if (this._items[0].items.length < 100) {
+          for (let i = 0; i < this._items[0].items.length; i++) {
+            document.hasChildNodes
+            //console.log(this._items[0].items[i].str);
+
+
+            this.htmlDom = document.createElement('tr');
+            let td = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
+
+            let tr_ingles = document.createElement('tr');
+            let td_ingles = document.createElement('td');
+            let td2_ingles = document.createElement('td');
+            let td3_ingles = document.createElement('td');
+
+            if (this._items[0].items[i].str != " "
+              && possiveisCampos[0].indexOf(this._items[0].items[i].str) != -1 && i > 13
+              && "ORDEM DE COMPRA" != this._items[0].items[i].str
+              && this._items[0].items[i].str != "OBSERVAÇÃO") {
+
+              td.colSpan = 3
+              td.innerText = this._items[0].items[i].str
+              td2.colSpan = 1
+              td2.className = "font-weight-bold"
+              td.style.padding = "10px";
+              td2.innerText = this._items[0].items[i + 1].str
+              td3.colSpan = 2
+              td3.style.borderRight = " 7px solid black";
+
+
+              this.htmlDom.append(td);
+              this.htmlDom.append(td2);
+              //this._items[0].items[i].str);
+
+              td_ingles.colSpan = 3
+              td_ingles.innerText = possiveisCampos_ingles[Campos_ingles.indexOf(this._items[0].items[i].str)]
+              td2_ingles.colSpan = 1
+              td2_ingles.className = "font-weight-bold"
+              td_ingles.style.padding = "10px";
+              td2_ingles.innerText = this._items[0].items[i + 1].str
+              td3_ingles.colSpan = 2
+              td3_ingles.style.borderRight = " 7px solid black";
+
+              tr_ingles.append(td_ingles);
+              tr_ingles.append(td2_ingles);
+
+              //Verifica se o proximo campo é um dos campos 
+              if (this._items[0].items[i + 3] !== undefined) {
+                if (possiveisCampos[0].indexOf(this._items[0].items[i + 3].str) == -1 &&
+                  this._items[0].items[i + 3].str != "ANÁLISE QUÍMICA") {
+                  td3.innerText = "";
+                  td3_ingles.innerText = ""
+                }
+                else
+                  if (this._items[0].items[i + 2].str != "ANÁLISE QUÍMICA") {
+                    td3.innerText = this._items[0].items[i + 2].str;
+                    td3_ingles.innerText = this._items[0].items[i + 2].str;
+                  }
+
+              }
+
+
+              tr_ingles.append(td3_ingles);
+              this.htmlDom.append(td3);
+
+              document.querySelector("#node").append(this.htmlDom)
+              document.querySelector("#node_ingles").append(tr_ingles);
+
+
+
+            }
+
+            
+
+            if (this._items[0].items[i].str == "ANÁLISE QUÍMICA") {
+              this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i + 5].str);
+              this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i + 5].str));
+              this.formulario.controls['obs'].setValue(this._items[0].items[i + 6].str);
+            }
+
+            if (this._items[0].items[i].str == "OBSERVACAO" && i < (this._items[0].items.length - 10)) {
+              this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i + 5].str);
+              this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i + 5].str));
+              this.formulario.controls['obs'].setValue(this._items[0].items[i + 6].str);
+            }
+          }
+        }else{
+
+          let index = novo_item.indexOf("OBSERVAÇÕES");
+          let end = novo_item.indexOf("ANÁLISE QUÍMICA");
+          for(var h = index+1; h < end; h++ )
+          {
+            document.hasChildNodes
+            //console.log(this._items[0].items[i].str);
+
+
+            this.htmlDom = document.createElement('tr');
+            let td = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
+
+            let tr_ingles = document.createElement('tr');
+            let td_ingles = document.createElement('td');
+            let td2_ingles = document.createElement('td');
+            let td3_ingles = document.createElement('td');
+            
+            var t = novo_item[h];
+            var rt = novo_item[h+1];
+            console.log(t + " " + rt);
 
             td.colSpan = 3
-            td.innerText = this._items[0].items[i].str
+            td.innerText = novo_item[h];
             td2.colSpan = 1
             td2.className = "font-weight-bold"
             td.style.padding = "10px";
-            td2.innerText = this._items[0].items[i + 1].str
-            td3.colSpan = 2
+            
+            let divi:string = novo_item[h+1];
+            let corta:string = "";
+            let stringResposta = [];
+            if(novo_item[h] == "LIMITE DE RESISTÊNCIA A TRAÇÃO")
+            {
+               corta = "KSI"
+               let resto = divi.split(corta);
+               stringResposta = [resto[0]+ " " + corta, resto[1]+ " " + corta]
+            }
+            if(novo_item[h] == "ESPESSURA" || novo_item[h] == "LARGURA")
+            {
+              corta = "MM"
+              let resto = divi.split(corta);
+              stringResposta = [resto[0]+ " " + corta, resto[1]+ " " + corta]
+            }
+            if(novo_item[h] == "CONDUTIVIDAD" || novo_item[h] == "CONDUTIVIDADE")
+            {
+              if("CONDUTIVIDAD")
+              {
+                td.innerText = novo_item[h]+"E";
+                novo_item[h+1] =  novo_item[h+1].slice(1)
+              }
+              corta = "MIN."
+              let resto = divi.split(corta);
+              stringResposta = [resto[0]+ " " , corta + " " + resto[1]]
+            }
+          
+            if(novo_item[h] == "TESTE DE DOBRA")
+            {
+              
+              stringResposta = ["OK","120º"]
+            }
+
+            if(novo_item[h] == "DUREZA")
+            {
+              corta = "HRF"
+              let resto = divi.split(corta);
+              stringResposta = [resto[0]+ " " + corta, resto[1]+ " " + corta]
+            }
+            
+            if(novo_item[h] == "RESISTIVIDADE ELETRICA")
+            {
+              corta = "MIN."
+              let resto = divi.split(corta);
+              stringResposta = [resto[0]+ " " , corta + " " + resto[1]]
+            }
+            
+
+            
+
+            td2.innerText = stringResposta[0];
+            td3.colSpan = 2 
+            td3.innerText = stringResposta[1];
             td3.style.borderRight = " 7px solid black";
 
 
             this.htmlDom.append(td);
             this.htmlDom.append(td2);
-            //this._items[0].items[i].str);
+            this.htmlDom.append(td3)
 
             td_ingles.colSpan = 3
-            td_ingles.innerText = possiveisCampos_ingles[Campos_ingles.indexOf(this._items[0].items[i].str)]
+            td_ingles.innerText = possiveisCampos_ingles[Campos_ingles.indexOf(td.innerText)]
             td2_ingles.colSpan = 1
             td2_ingles.className = "font-weight-bold"
             td_ingles.style.padding = "10px";
-            td2_ingles.innerText = this._items[0].items[i + 1].str
-            td3_ingles.colSpan = 2
+            td2_ingles.innerText = stringResposta[0];
+            td3_ingles.colSpan = 2;
+            td3_ingles.innerText = stringResposta[1];
             td3_ingles.style.borderRight = " 7px solid black";
 
             tr_ingles.append(td_ingles);
             tr_ingles.append(td2_ingles);
-
-            //Verifica se o proximo campo é um dos campos 
-            if (this._items[0].items[i + 3] !== undefined) {
-              if (possiveisCampos[0].indexOf(this._items[0].items[i + 3].str) == -1 &&
-                this._items[0].items[i + 3].str != "ANÁLISE QUÍMICA") {
-                td3.innerText = "";
-                td3_ingles.innerText = ""
-              }
-              else
-                if (this._items[0].items[i + 2].str != "ANÁLISE QUÍMICA") {
-                  td3.innerText = this._items[0].items[i + 2].str;
-                  td3_ingles.innerText = this._items[0].items[i + 2].str;
-                }
-
-            }
-
-
             tr_ingles.append(td3_ingles);
-            this.htmlDom.append(td3);
 
             document.querySelector("#node").append(this.htmlDom)
             document.querySelector("#node_ingles").append(tr_ingles);
 
-
-
+            h++
           }
-
-          this.formulario.controls['obsIngles'].setValue('THIS PRODUCT IS IN COMPLIANCE WITH THE ROHS DIRECTIVE 2011/65 / EU');
-          this.formulario.controls['corridaIngles'].setValue(this.corridaIngles(this.formulario.value.corrida))
-
-          if (this._items[0].items[i].str == "ANÁLISE QUÍMICA") {
-            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i + 5].str);
-            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i + 5].str));
-            this.formulario.controls['obs'].setValue(this._items[0].items[i + 6].str);
-          }
-
-          if (this._items[0].items[i].str == "OBSERVACAO" && i < (this._items[0].items.length - 10)) {
-            this.formulario.controls['analiseQuimica'].setValue(this._items[0].items[i + 5].str);
-            this.formulario.controls['analiseQuimicaIngles'].setValue(this.analiseQuimicaIngles(this._items[0].items[i + 5].str));
-            this.formulario.controls['obs'].setValue(this._items[0].items[i + 6].str);
-          }
+          
         }
-
       }
 
       this.loading = false;
