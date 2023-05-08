@@ -28,7 +28,7 @@
     "font-awesome": "^4.7.0",
     "git": "^0.1.5",
     "html2canvas": "^1.0.0-rc.5",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "ng2-search-filter": "^0.5.1",
     "pdfjs-dist": "^2.2.228",
     "popper.js": "^1.16.1",
